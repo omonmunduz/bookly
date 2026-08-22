@@ -111,7 +111,7 @@ export async function createOrganizationWithOwner(
         organization_id: org.id,
         email: input.userEmail,
         full_name: input.userFullName,
-        role: 'owner',
+        role: 'admin',
         is_active: true,
       } as any);
 
@@ -125,7 +125,7 @@ export async function createOrganizationWithOwner(
       {
         app_metadata: {
           organization_id: org.id,
-          role: 'owner',
+          role: 'admin',
         },
       }
     );

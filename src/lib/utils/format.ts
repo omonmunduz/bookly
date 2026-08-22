@@ -38,6 +38,11 @@ export function formatMoneyDelta(amount: number, currency?: string): string {
   return sign + formatMoney(amount, currency);
 }
 
+/**
+ * Alias for formatMoney for consistency across the codebase
+ */
+export const formatCurrency = formatMoney;
+
 // ── Dates ─────────────────────────────────────────────────────────────────────
 
 /**

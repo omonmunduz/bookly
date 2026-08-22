@@ -17,14 +17,14 @@ import type { UserRole } from '@/features/users/types';
 import type { Result } from '@/lib/types/common';
 import { ROUTES } from '@/lib/constants/routes';
 import { getAuthState } from './session';
-import { ROLE_LEVEL, hasRole, isOwner } from './roles';
+import { ROLE_LEVEL, hasRole } from './roles';
 
 /**
  * Re-exported from ./roles so server-side callers keep a single import, while
  * Client Components can import from ./roles directly without pulling in
  * next/headers via the session module below.
  */
-export { hasRole, isOwner };
+export { hasRole };
 
 // ── Hard Guards (throw / redirect) ────────────────────────────────────────────
 

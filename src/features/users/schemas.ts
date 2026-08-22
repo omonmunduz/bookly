@@ -7,7 +7,7 @@ import { z } from 'zod';
 /**
  * User role enum schema
  */
-export const userRoleSchema = z.enum(['owner', 'admin', 'manager', 'employee']);
+export const userRoleSchema = z.enum(['admin', 'manager', 'mechanic']);
 
 /**
  * Email validation

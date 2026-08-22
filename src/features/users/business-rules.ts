@@ -13,10 +13,9 @@ import type { Result } from '@/lib/types/common';
  * Higher number = more permissions
  */
 const ROLE_HIERARCHY: Record<UserRole, number> = {
-  owner: 4,
   admin: 3,
   manager: 2,
-  employee: 1,
+  mechanic: 1,
 };
 
 /**
@@ -30,17 +29,15 @@ export function hasRole(user: User, requiredRole: UserRole): boolean {
  * Check if user can manage (invite/edit/remove) other users
  *
  * Rules:
- * - Only owner and admin can manage users
- * - Owner can manage anyone
- * - Admin cannot manage owner
+ * - Only admins can manage users
  * - Users cannot change their own role
  */
 export function canManageUser(actor: User, targetUser: User): Result<void> {
-  // Must be owner or admin
+  // Must be admin
   if (!hasRole(actor, 'admin')) {
     return {
       success: false,
-      error: 'Only owners and admins can manage users',
+      error: 'Only admins can manage users',
     };
   }
 
@@ -52,14 +49,6 @@ export function canManageUser(actor: User, targetUser: User): Result<void> {
     };
   }
 
-  // Admin cannot manage owner
-  if (actor.role === 'admin' && targetUser.role === 'owner') {
-    return {
-      success: false,
-      error: 'Admins cannot manage organization owners',
-    };
-  }
-
   return { success: true, data: undefined };
 }
 
@@ -67,19 +56,10 @@ export function canManageUser(actor: User, targetUser: User): Result<void> {
  * Check if user can change role to a specific role
  *
  * Rules:
- * - Only owner can assign owner role
- * - Admin can assign admin/manager/employee
+ * - Admin can assign admin/manager/mechanic
  * - Cannot escalate to role higher than your own
  */
 export function canAssignRole(actor: User, newRole: UserRole): Result<void> {
-  // Only owner can assign owner role
-  if (newRole === 'owner' && actor.role !== 'owner') {
-    return {
-      success: false,
-      error: 'Only the organization owner can assign the owner role',
-    };
-  }
-
   // Cannot assign role higher than your own
   if (ROLE_HIERARCHY[newRole] > ROLE_HIERARCHY[actor.role]) {
     return {
@@ -95,7 +75,7 @@ export function canAssignRole(actor: User, newRole: UserRole): Result<void> {
  * Check if user can invite new users to organization
  *
  * Rules:
- * - Owner and admin can invite
+ * - Only admins can invite
  * - Check organization user limits (Phase 2)
  */
 export function canInviteUser(
@@ -103,11 +83,11 @@ export function canInviteUser(
   organization: Organization,
   currentUserCount: number
 ): Result<void> {
-  // Only owner and admin can invite
+  // Only admins can invite
   if (!hasRole(actor, 'admin')) {
     return {
       success: false,
-      error: 'Only owners and admins can invite users',
+      error: 'Only admins can invite users',
     };
   }
 
@@ -128,12 +108,12 @@ export function canInviteUser(
  *
  * Rules:
  * - Same as canManageUser
- * - Cannot delete the last owner
+ * - Cannot delete the last admin
  */
 export function canDeleteUser(
   actor: User,
   targetUser: User,
-  ownerCount: number
+  adminCount: number
 ): Result<void> {
   // Check basic manage permission
   const manageResult = canManageUser(actor, targetUser);
@@ -141,11 +121,11 @@ export function canDeleteUser(
     return manageResult;
   }
 
-  // Cannot delete last owner
-  if (targetUser.role === 'owner' && ownerCount <= 1) {
+  // Cannot delete last admin
+  if (targetUser.role === 'admin' && adminCount <= 1) {
     return {
       success: false,
-      error: 'Cannot delete the last owner. Transfer ownership first.',
+      error: 'Cannot delete the last admin. Assign another admin first.',
     };
   }
 
@@ -224,10 +204,9 @@ export function getDisplayName(user: User): string {
  */
 export function getRoleDisplayName(role: UserRole): string {
   const names: Record<UserRole, string> = {
-    owner: 'Owner',
     admin: 'Administrator',
     manager: 'Manager',
-    employee: 'Employee',
+    mechanic: 'Mechanic',
   };
   return names[role];
 }
@@ -237,10 +216,9 @@ export function getRoleDisplayName(role: UserRole): string {
  */
 export function getRoleDescription(role: UserRole): string {
   const descriptions: Record<UserRole, string> = {
-    owner: 'Full access to all features and settings. Can manage billing and organization.',
-    admin: 'Full operational access. Can manage users and all business data.',
-    manager: 'Can manage products, customers, sales, and expenses. Can view all reports.',
-    employee: 'Can create sales and record payments. Limited editing and reporting.',
+    admin: 'Full access to all features and settings. Can manage users and all business data.',
+    manager: 'Operational access. Can manage couriers, bikes, assignments, and earnings. Can view reports.',
+    mechanic: 'Maintenance-focused. Can view bikes, perform inspections, and record maintenance. No financial access.',
   };
   return descriptions[role];
 }

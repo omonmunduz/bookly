@@ -42,6 +42,47 @@ export const ROUTES = {
     home: '/dashboard',
   },
 
+  bikes: {
+    list: '/bikes',
+    new: '/bikes/new',
+    detail: (id: string) => `/bikes/${id}`,
+    edit: (id: string) => `/bikes/${id}/edit`,
+  },
+
+  couriers: {
+    list: '/couriers',
+    new: '/couriers/new',
+    detail: (id: string) => `/couriers/${id}`,
+    edit: (id: string) => `/couriers/${id}/edit`,
+  },
+
+  assignments: {
+    list: '/assignments',
+    new: '/assignments/new',
+    detail: (id: string) => `/assignments/${id}`,
+    return: (id: string) => `/assignments/${id}/return`,
+  },
+
+  rentalPlans: {
+    list: '/rental-plans',
+    new: '/rental-plans/new',
+    detail: (id: string) => `/rental-plans/${id}`,
+    edit: (id: string) => `/rental-plans/${id}/edit`,
+  },
+
+  maintenance: {
+    list: '/maintenance',
+    new: '/maintenance/new',
+    detail: (id: string) => `/maintenance/${id}`,
+    approvals: '/maintenance/approvals',
+  },
+
+  earnings: {
+    list: '/earnings',
+    new: '/earnings/new',
+    detail: (id: string) => `/earnings/${id}`,
+  },
+
   customers: {
     list: '/customers',
     new: '/customers/new',

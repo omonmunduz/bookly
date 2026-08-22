@@ -22,18 +22,12 @@ import type { UserRole } from '@/features/users/types';
  * a numeric level expresses it without enumerating every role at each call site.
  */
 export const ROLE_LEVEL: Record<UserRole, number> = {
-  owner: 4,
   admin: 3,
   manager: 2,
-  employee: 1,
+  mechanic: 1,
 };
 
 /** True when the user's role is at or above `minimumRole`. */
 export function hasRole(user: AuthUser, minimumRole: UserRole): boolean {
   return ROLE_LEVEL[user.role] >= ROLE_LEVEL[minimumRole];
-}
-
-/** True if the user is the organization owner. */
-export function isOwner(user: AuthUser): boolean {
-  return user.role === 'owner';
 }

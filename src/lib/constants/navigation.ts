@@ -16,14 +16,13 @@
 
 import {
   BarChart3,
-  Boxes,
+  Bike,
   Home,
-  Package,
   Receipt,
   Settings,
-  ShoppingCart,
   Users,
   Wallet,
+  Wrench,
   type LucideIcon,
 } from 'lucide-react';
 import { ROUTES } from './routes';
@@ -45,43 +44,50 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   {
-    label: 'Home',
+    label: 'Dashboard',
     href: ROUTES.dashboard.home,
     icon: Home,
     available: true,
     primary: true,
   },
   {
-    label: 'Customers',
-    href: ROUTES.customers.list,
+    label: 'Bikes',
+    href: '/bikes',
+    icon: Bike,
+    available: true,
+    primary: true,
+  },
+  {
+    label: 'Couriers',
+    href: '/couriers',
     icon: Users,
     available: true,
     primary: true,
   },
   {
-    label: 'Sales',
-    href: ROUTES.sales.list,
-    icon: ShoppingCart,
-    available: true,
-    primary: true,
-  },
-  {
-    label: 'Products',
-    href: ROUTES.products.list,
-    icon: Package,
-    available: true,
-    primary: true,
-  },
-  {
-    label: 'Inventory',
-    href: ROUTES.inventory.list,
-    icon: Boxes,
-    available: true,
-  },
-  {
-    label: 'Payments',
-    href: ROUTES.payments.list,
+    label: 'Assignments',
+    href: '/assignments',
     icon: Wallet,
+    available: true,
+    primary: true,
+  },
+  {
+    label: 'Rental Plans',
+    href: '/rental-plans',
+    icon: Receipt,
+    available: true,
+  },
+  {
+    label: 'Earnings',
+    href: '/earnings',
+    icon: BarChart3,
+    available: true,
+    minimumRole: 'manager',
+  },
+  {
+    label: 'Maintenance',
+    href: '/maintenance',
+    icon: Wrench,
     available: true,
   },
   {
@@ -89,14 +95,6 @@ export const NAV_ITEMS: NavItem[] = [
     href: ROUTES.expenses.list,
     icon: Receipt,
     available: true,
-  },
-  {
-    label: 'Reports',
-    href: ROUTES.reports.overview,
-    icon: BarChart3,
-    available: false,
-    minimumRole: 'manager',
-    hint: 'Needs sales data to report on',
   },
   {
     label: 'Settings',

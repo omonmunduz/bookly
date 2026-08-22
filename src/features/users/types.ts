@@ -17,7 +17,7 @@ import type { UserId, OrganizationId, Timestamps } from '@/lib/types/common';
  * User role hierarchy
  * owner > admin > manager > employee
  */
-export type UserRole = 'owner' | 'admin' | 'manager' | 'employee';
+export type UserRole = 'admin' | 'manager' | 'mechanic';
 
 /**
  * Complete User entity (user_profiles table)
