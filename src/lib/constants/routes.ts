@@ -39,7 +39,7 @@ export const ROUTES = {
   },
 
   dashboard: {
-    home: '/dashboard',
+    home: '/',
   },
 
   bikes: {
