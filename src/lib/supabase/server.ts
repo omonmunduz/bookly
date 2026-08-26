@@ -7,6 +7,7 @@
  */
 
 import { createServerClient } from '@supabase/ssr';
+import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import type { Database } from '@/lib/database.types';
 
@@ -31,6 +32,35 @@ export async function createClient() {
             // The middleware handles session refresh.
           }
         },
+      },
+    }
+  );
+}
+
+/**
+ * Supabase admin client with service role key.
+ * Use ONLY for admin operations that require elevated privileges.
+ *
+ * WARNING: This bypasses Row Level Security (RLS).
+ * Only use for operations that genuinely need admin access:
+ * - User invitation
+ * - User deletion
+ * - Updating user metadata
+ *
+ * Always verify authorization in your action/route before using this client.
+ */
+export function createAdminClient() {
+  if (!process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error('SUPABASE_SERVICE_ROLE_KEY is not set');
+  }
+
+  return createSupabaseClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     }
   );

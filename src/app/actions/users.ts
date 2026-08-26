@@ -8,7 +8,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { requireMinimumRole } from '@/features/auth/guards';
 import { UsersRepository } from '@/features/users/service';
 import type {
@@ -97,6 +97,7 @@ export async function createUserAction(
   try {
     const { user, repository } = await getRepository();
     const supabase = await createClient();
+    const adminClient = createAdminClient();
 
     // Only admins can create users
     if (user.role !== 'admin') {
@@ -127,7 +128,7 @@ export async function createUserAction(
 
     // Try to invite the user via Supabase Admin API
     // If they already have an auth account, Supabase will return an error
-    const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(email, {
+    const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
       data: {
         full_name: input.full_name,
         organization_id: user.organizationId,
@@ -172,7 +173,7 @@ export async function createUserAction(
 
     if (!createResult.success) {
       // Profile creation failed - try to clean up the auth user
-      await supabase.auth.admin.deleteUser(inviteData.user.id);
+      await adminClient.auth.admin.deleteUser(inviteData.user.id);
       return {
         success: false,
         error: `Failed to create user profile: ${createResult.error}`,
