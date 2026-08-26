@@ -86,7 +86,7 @@ export function UserForm({ user }: UserFormProps) {
           title: 'Success',
           description: isEdit
             ? 'User updated successfully'
-            : 'User created successfully',
+            : 'Invitation sent! The user will receive an email to set their password.',
         });
         router.push('/team');
         router.refresh();
@@ -104,11 +104,11 @@ export function UserForm({ user }: UserFormProps) {
     <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>{isEdit ? 'Edit User' : 'User Information'}</CardTitle>
+          <CardTitle>{isEdit ? 'Edit User' : 'Invite Team Member'}</CardTitle>
           <CardDescription>
             {isEdit
               ? 'Update user details and role'
-              : 'Enter the details for the new team member'}
+              : 'Enter the email and details for the new team member. They will receive an invitation email to set their password.'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -192,7 +192,7 @@ export function UserForm({ user }: UserFormProps) {
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isEdit ? 'Save Changes' : 'Create User'}
+              {isEdit ? 'Save Changes' : 'Send Invitation'}
             </Button>
           </div>
         </CardContent>

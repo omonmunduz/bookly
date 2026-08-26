@@ -39,6 +39,14 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    if (type === 'invite') {
+      // Email invitation accepted — redirect to dashboard
+      // The user profile was already created when the invitation was sent
+      return NextResponse.redirect(
+        new URL(ROUTES.dashboard.home, requestUrl.origin)
+      );
+    }
+
     if (type === 'signup') {
       // Email verification after signup — redirect to onboarding
       return NextResponse.redirect(

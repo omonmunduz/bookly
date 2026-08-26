@@ -81,20 +81,22 @@ export async function getUserAction(id: string): Promise<Result<User>> {
 }
 
 /**
- * Create a new user (admin only).
+ * Create a new user by sending an invitation email.
  *
- * Note: This is a simplified implementation. In production, this should:
- * 1. Create the auth.users record via Supabase Admin API
- * 2. Send an invitation email
- * 3. Create the user_profiles record
+ * This uses Supabase Admin API to:
+ * 1. Check if user already exists in auth.users
+ * 2. Send an invitation email via Supabase Auth
+ * 3. Create a user_profile record with organization and role
  *
- * For now, this returns an error asking for proper user invitation flow.
+ * The invited user will receive an email with a link to set their password.
+ * After setting their password, they'll be automatically added to the organization.
  */
 export async function createUserAction(
   input: CreateUserInput
 ): Promise<Result<{ id: string }>> {
   try {
-    const { user } = await getRepository();
+    const { user, repository } = await getRepository();
+    const supabase = await createClient();
 
     // Only admins can create users
     if (user.role !== 'admin') {
@@ -104,15 +106,84 @@ export async function createUserAction(
       };
     }
 
-    // TODO: Implement proper user creation flow
-    // This requires:
-    // 1. Supabase Admin API to create auth.users
-    // 2. Email invitation system
-    // 3. User profile creation after signup
+    const email = input.email.toLowerCase().trim();
+
+    // Check if user already exists in this organization's user_profiles
+    const existingUsers = await repository.list({
+      organization_id: user.organizationId,
+      search: email,
+    });
+
+    if (existingUsers.success) {
+      // Check for exact email match (search is fuzzy)
+      const exactMatch = existingUsers.data.find(u => u.email.toLowerCase() === email);
+      if (exactMatch) {
+        return {
+          success: false,
+          error: 'A user with this email already exists in your organization.',
+        };
+      }
+    }
+
+    // Try to invite the user via Supabase Admin API
+    // If they already have an auth account, Supabase will return an error
+    const { data: inviteData, error: inviteError } = await supabase.auth.admin.inviteUserByEmail(email, {
+      data: {
+        full_name: input.full_name,
+        organization_id: user.organizationId,
+        role: input.role || 'mechanic',
+        phone: input.phone || null,
+      },
+      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/callback?type=invite`,
+    });
+
+    if (inviteError) {
+      // Handle specific error cases
+      if (inviteError.message?.includes('already registered') || inviteError.message?.includes('already been invited')) {
+        return {
+          success: false,
+          error: 'This email is already registered or has a pending invitation.',
+        };
+      }
+
+      return {
+        success: false,
+        error: `Failed to send invitation: ${inviteError.message}`,
+      };
+    }
+
+    if (!inviteData.user) {
+      return {
+        success: false,
+        error: 'Failed to create user invitation.',
+      };
+    }
+
+    // Create the user profile immediately
+    // This ensures the profile exists when they accept the invitation
+    const createResult = await repository.create({
+      id: inviteData.user.id,
+      organization_id: user.organizationId,
+      email: email,
+      full_name: input.full_name,
+      phone: input.phone || undefined,
+      role: input.role || 'mechanic',
+    });
+
+    if (!createResult.success) {
+      // Profile creation failed - try to clean up the auth user
+      await supabase.auth.admin.deleteUser(inviteData.user.id);
+      return {
+        success: false,
+        error: `Failed to create user profile: ${createResult.error}`,
+      };
+    }
+
+    revalidatePath('/team');
 
     return {
-      success: false,
-      error: 'User creation requires invitation flow implementation. Please use Supabase Admin panel to invite users for now.',
+      success: true,
+      data: { id: inviteData.user.id },
     };
   } catch (error) {
     return failure(error, 'Failed to create user');
