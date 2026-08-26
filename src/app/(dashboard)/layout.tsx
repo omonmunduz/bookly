@@ -24,6 +24,7 @@ import { requireActiveUser } from '@/features/auth/guards';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { BottomNav } from '@/components/layout/BottomNav';
 import { AppHeader } from '@/components/layout/AppHeader';
+import { Toaster } from '@/components/ui/toaster';
 
 export default async function DashboardLayout({
   children,
@@ -49,6 +50,7 @@ export default async function DashboardLayout({
       </div>
 
       <BottomNav />
+      <Toaster />
     </div>
   );
 }

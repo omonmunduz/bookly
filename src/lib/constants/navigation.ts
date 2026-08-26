@@ -21,6 +21,7 @@ import {
   Receipt,
   Settings,
   Users,
+  UsersRound,
   Wallet,
   Wrench,
   type LucideIcon,
@@ -95,6 +96,13 @@ export const NAV_ITEMS: NavItem[] = [
     href: ROUTES.expenses.list,
     icon: Receipt,
     available: true,
+  },
+  {
+    label: 'Team',
+    href: '/team',
+    icon: UsersRound,
+    available: true,
+    minimumRole: 'manager',
   },
   {
     label: 'Settings',
