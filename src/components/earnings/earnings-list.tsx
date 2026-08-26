@@ -12,18 +12,7 @@ import {
   EARNINGS_STATUS_LABELS,
   EARNINGS_STATUS_VARIANT,
 } from '@/features/earnings/labels';
-
-interface EarningsPeriod {
-  id: string;
-  courier_id: string;
-  period_start: string;
-  period_end: string;
-  gross_earnings: number;
-  total_deductions: number;
-  net_payout: number;
-  status: 'draft' | 'finalized' | 'paid';
-  paid_at: string | null;
-}
+import type { EarningsPeriod } from '@/lib/types/ebike';
 
 interface EarningsListProps {
   periods: EarningsPeriod[];

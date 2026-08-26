@@ -75,7 +75,6 @@ export function UserForm({ user }: UserFormProps) {
             role,
           })
         : await createUserAction({
-            organization_id: '', // Set by the action
             email: email.trim(),
             full_name: fullName.trim(),
             phone: phone.trim() || undefined,

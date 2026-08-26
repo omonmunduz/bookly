@@ -13,11 +13,18 @@ import { requireMinimumRole } from '@/features/auth/guards';
 import { UsersRepository } from '@/features/users/service';
 import type {
   User,
-  CreateUserInput,
   UpdateUserInput,
   UserFilter,
 } from '@/features/users/types';
 import type { Result } from '@/lib/types/common';
+
+// Input for creating a user - organization_id is set by the action
+interface CreateUserInput {
+  email: string;
+  full_name: string;
+  phone?: string;
+  role?: User['role'];
+}
 
 /**
  * Build a repository bound to the caller's organization.
@@ -75,12 +82,19 @@ export async function getUserAction(id: string): Promise<Result<User>> {
 
 /**
  * Create a new user (admin only).
+ *
+ * Note: This is a simplified implementation. In production, this should:
+ * 1. Create the auth.users record via Supabase Admin API
+ * 2. Send an invitation email
+ * 3. Create the user_profiles record
+ *
+ * For now, this returns an error asking for proper user invitation flow.
  */
 export async function createUserAction(
   input: CreateUserInput
 ): Promise<Result<{ id: string }>> {
   try {
-    const { repository, user } = await getRepository();
+    const { user } = await getRepository();
 
     // Only admins can create users
     if (user.role !== 'admin') {
@@ -90,18 +104,16 @@ export async function createUserAction(
       };
     }
 
-    const result = await repository.create({
-      ...input,
-      organization_id: user.organizationId,
-    });
+    // TODO: Implement proper user creation flow
+    // This requires:
+    // 1. Supabase Admin API to create auth.users
+    // 2. Email invitation system
+    // 3. User profile creation after signup
 
-    if (!result.success) {
-      return result;
-    }
-
-    revalidatePath('/team');
-
-    return { success: true, data: { id: result.data.id } };
+    return {
+      success: false,
+      error: 'User creation requires invitation flow implementation. Please use Supabase Admin panel to invite users for now.',
+    };
   } catch (error) {
     return failure(error, 'Failed to create user');
   }

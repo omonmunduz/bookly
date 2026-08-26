@@ -23,7 +23,7 @@ import {
 } from '@/app/actions/assignments';
 import { getEarningsCountByStatusAction } from '@/app/actions/earnings';
 import { getMaintenancePendingApprovalAction } from '@/app/actions/maintenance';
-import { MetricCard } from '@/features/dashboard/components/MetricCard';
+import { MetricCard } from '@/components/shared/MetricCard';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 

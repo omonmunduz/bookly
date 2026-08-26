@@ -13,6 +13,7 @@ import type {
   UserFilter,
 } from './types';
 import type { OrganizationId, Result } from '@/lib/types/common';
+import { mapUserFromRow } from './mapper';
 
 export class UsersRepository {
   constructor(
@@ -49,7 +50,7 @@ export class UsersRepository {
       return { success: false, error: error.message };
     }
 
-    return { success: true, data: data as User[] };
+    return { success: true, data: data.map(mapUserFromRow) };
   }
 
   /**
@@ -71,7 +72,7 @@ export class UsersRepository {
       return { success: false, error: 'User not found' };
     }
 
-    return { success: true, data: data as User };
+    return { success: true, data: mapUserFromRow(data) };
   }
 
   /**
@@ -97,7 +98,7 @@ export class UsersRepository {
       return { success: false, error: error.message };
     }
 
-    return { success: true, data: data as User };
+    return { success: true, data: mapUserFromRow(data) };
   }
 
   /**
@@ -125,7 +126,7 @@ export class UsersRepository {
       return { success: false, error: 'User not found' };
     }
 
-    return { success: true, data: data as User };
+    return { success: true, data: mapUserFromRow(data) };
   }
 
   /**

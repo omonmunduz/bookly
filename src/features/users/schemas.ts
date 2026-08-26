@@ -57,7 +57,7 @@ export const createUserSchema = z.object({
   email: emailSchema,
   full_name: fullNameSchema,
   phone: phoneSchema,
-  role: userRoleSchema.default('employee'),
+  role: userRoleSchema.default('mechanic'),
 });
 
 /**
@@ -75,7 +75,7 @@ export const updateUserSchema = z.object({
  */
 export const inviteUserSchema = z.object({
   email: emailSchema,
-  role: userRoleSchema.default('employee'),
+  role: userRoleSchema.default('mechanic'),
 });
 
 /**

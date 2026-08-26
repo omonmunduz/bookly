@@ -1005,6 +1005,9 @@ export type Database = {
         | "replacement"
         | "cleaning"
         | "other"
+      payment_method: "cash" | "card" | "bank_transfer" | "check" | "other"
+      payment_status: "unpaid" | "partial" | "paid"
+      sale_status: "draft" | "completed" | "cancelled"
       user_role: "admin" | "manager" | "mechanic"
     }
     CompositeTypes: {
