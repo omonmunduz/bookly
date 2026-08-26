@@ -104,16 +104,6 @@ export async function middleware(request: NextRequest) {
     return supabaseResponse;
   }
 
-  // Root has no page — send visitors somewhere real rather than a 404.
-  if (pathname === '/') {
-    url.pathname = !isSignedIn
-      ? ROUTES.auth.login
-      : hasOrgClaim
-        ? ROUTES.dashboard.home
-        : ROUTES.onboarding.setup;
-    return NextResponse.redirect(url);
-  }
-
   // --- No session ---
   if (!isSignedIn) {
     if (isPublicRoute) return supabaseResponse;
