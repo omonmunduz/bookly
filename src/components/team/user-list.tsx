@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useTransition } from 'react';
 import Link from 'next/link';
 import { Search, Mail, Phone, Pencil, UserX, UserCheck } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
@@ -15,9 +15,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { MoreVertical } from 'lucide-react';
 import { ROLE_LABELS, ROLE_VARIANTS, ROLE_DESCRIPTIONS } from '@/features/users/labels';
+import { deactivateUserAction, reactivateUserAction } from '@/app/actions/users';
 import type { User } from '@/features/users/types';
+import { useToast } from '@/hooks/use-toast';
 
 interface UserListProps {
   users: User[];
@@ -121,38 +124,101 @@ export function UserList({ users }: UserListProps) {
 }
 
 function UserActions({ user }: { user: User }) {
+  const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
+  const [reactivateDialogOpen, setReactivateDialogOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const { toast } = useToast();
+
+  const handleDeactivate = () => {
+    setError(null);
+    startTransition(async () => {
+      const result = await deactivateUserAction(user.id);
+
+      if (!result.success) {
+        setError(result.error);
+      } else {
+        setDeactivateDialogOpen(false);
+        toast({
+          title: 'User deactivated',
+          description: `${user.full_name} has been deactivated.`,
+        });
+      }
+    });
+  };
+
+  const handleReactivate = () => {
+    setError(null);
+    startTransition(async () => {
+      const result = await reactivateUserAction(user.id);
+
+      if (!result.success) {
+        setError(result.error);
+      } else {
+        setReactivateDialogOpen(false);
+        toast({
+          title: 'User reactivated',
+          description: `${user.full_name} has been reactivated.`,
+        });
+      }
+    });
+  };
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <MoreVertical className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href={`/team/${user.id}/edit`}>
-            <Pencil className="mr-2 h-4 w-4" />
-            Edit user
-          </Link>
-        </DropdownMenuItem>
-        {user.is_active ? (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon">
+            <MoreVertical className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href={`/team/${user.id}/deactivate`}>
+            <Link href={`/team/${user.id}/edit`}>
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit user
+            </Link>
+          </DropdownMenuItem>
+          {user.is_active ? (
+            <DropdownMenuItem onClick={() => setDeactivateDialogOpen(true)}>
               <UserX className="mr-2 h-4 w-4" />
               Deactivate
-            </Link>
-          </DropdownMenuItem>
-        ) : (
-          <DropdownMenuItem asChild>
-            <Link href={`/team/${user.id}/reactivate`}>
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem onClick={() => setReactivateDialogOpen(true)}>
               <UserCheck className="mr-2 h-4 w-4" />
               Reactivate
-            </Link>
-          </DropdownMenuItem>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      {/* Deactivate Confirmation Dialog */}
+      <ConfirmDialog
+        open={deactivateDialogOpen}
+        onOpenChange={setDeactivateDialogOpen}
+        title="Deactivate user"
+        description={`Are you sure you want to deactivate ${user.full_name}? They will lose access to the system but their data will be preserved.`}
+        confirmLabel="Deactivate"
+        destructive
+        isPending={isPending}
+        error={error}
+        onConfirm={handleDeactivate}
+      />
+
+      {/* Reactivate Confirmation Dialog */}
+      <ConfirmDialog
+        open={reactivateDialogOpen}
+        onOpenChange={setReactivateDialogOpen}
+        title="Reactivate user"
+        description={`Are you sure you want to reactivate ${user.full_name}? They will regain access to the system.`}
+        confirmLabel="Reactivate"
+        isPending={isPending}
+        error={error}
+        onConfirm={handleReactivate}
+      />
+    </>
   );
 }

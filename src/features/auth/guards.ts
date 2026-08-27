@@ -136,6 +136,9 @@ export async function requireActiveUser(next?: string): Promise<AuthUser> {
  *
  * Sending already-onboarded users to the dashboard is what stops
  * /onboarding/setup from being replayed to create a second organization.
+ *
+ * IMPORTANT: This also blocks invited users who already have a profile
+ * (with organization) from accidentally creating a new organization.
  */
 export async function requireOnboardingUser(): Promise<{
   userId: string;
@@ -148,6 +151,8 @@ export async function requireOnboardingUser(): Promise<{
       return { userId: state.userId, email: state.email };
 
     case 'authenticated':
+      // User already has an organization (either created it or was invited)
+      // Send them to the dashboard instead of letting them create a new one
       redirect(ROUTES.dashboard.home);
 
     case 'deactivated':

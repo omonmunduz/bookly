@@ -40,8 +40,13 @@ export async function GET(request: NextRequest) {
     }
 
     if (type === 'invite') {
-      // Email invitation accepted — redirect to dashboard
-      // The user profile was already created when the invitation was sent
+      // Team invitation accepted
+      // The invited user has:
+      // 1. Clicked the invite link from their email
+      // 2. Set their password (handled by Supabase's invite email flow)
+      // 3. Been automatically logged in with a session
+      // Their user_profile was pre-created with the organization_id when the invite was sent,
+      // so they're already a member of the organization that invited them.
       return NextResponse.redirect(
         new URL(ROUTES.dashboard.home, requestUrl.origin)
       );

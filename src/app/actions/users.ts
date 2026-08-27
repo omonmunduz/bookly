@@ -11,6 +11,7 @@ import { revalidatePath } from 'next/cache';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { requireMinimumRole } from '@/features/auth/guards';
 import { UsersRepository } from '@/features/users/service';
+import { getAppOrigin } from '@/lib/constants/app-url';
 import type {
   User,
   UpdateUserInput,
@@ -126,13 +127,9 @@ export async function createUserAction(
       }
     }
 
-    // Determine the redirect URL for the invitation
-    // Priority: NEXT_PUBLIC_APP_URL > Vercel URL > localhost
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
-                    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
-
     // Try to invite the user via Supabase Admin API
     // If they already have an auth account, Supabase will return an error
+    // The inviteUserByEmail sends an email with a link to set their password
     const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
       data: {
         full_name: input.full_name,
@@ -140,7 +137,8 @@ export async function createUserAction(
         role: input.role || 'mechanic',
         phone: input.phone || null,
       },
-      redirectTo: `${baseUrl}/auth/callback?type=invite`,
+      // Use the same origin resolution as other auth flows for consistency
+      redirectTo: `${getAppOrigin()}/auth/callback?type=invite`,
     });
 
     if (inviteError) {

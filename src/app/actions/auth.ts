@@ -111,6 +111,20 @@ export async function createOrganizationAction(input: {
     };
   }
 
+  // CRITICAL: Check if this user was invited to an organization
+  // If they have a user_profile, they were invited and should NOT create a new org
+  const { data: existingProfile } = await supabase
+    .from('user_profiles')
+    .select('id, organization_id, organization:organizations(id, name, slug)')
+    .eq('id', user.id)
+    .maybeSingle();
+
+  if (existingProfile && existingProfile.organization_id) {
+    // User was invited! They already belong to an organization.
+    // Redirect them to the dashboard instead of creating a new org.
+    redirect(ROUTES.dashboard.home);
+  }
+
   // Get user's full name from user_metadata (set during signup)
   const fullName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
 
