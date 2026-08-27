@@ -130,6 +130,24 @@ export class UsersRepository {
   }
 
   /**
+   * Delete a user profile permanently.
+   * WARNING: This is a hard delete. Use deactivate (is_active = false) for soft delete.
+   */
+  async delete(id: string): Promise<Result<void>> {
+    const { error } = await this.supabase
+      .from('user_profiles')
+      .delete()
+      .eq('id', id)
+      .eq('organization_id', this.organizationId);
+
+    if (error) {
+      return { success: false, error: error.message };
+    }
+
+    return { success: true, data: undefined };
+  }
+
+  /**
    * Count active users in the organization.
    */
   async countActive(): Promise<Result<number>> {

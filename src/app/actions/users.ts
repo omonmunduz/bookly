@@ -25,6 +25,7 @@ interface CreateUserInput {
   full_name: string;
   phone?: string;
   role?: User['role'];
+  password: string;
 }
 
 /**
@@ -82,15 +83,15 @@ export async function getUserAction(id: string): Promise<Result<User>> {
 }
 
 /**
- * Create a new user by sending an invitation email.
+ * Create a new user by creating their account with a password.
  *
  * This uses Supabase Admin API to:
  * 1. Check if user already exists in auth.users
- * 2. Send an invitation email via Supabase Auth
+ * 2. Create auth user with the provided password
  * 3. Create a user_profile record with organization and role
  *
- * The invited user will receive an email with a link to set their password.
- * After setting their password, they'll be automatically added to the organization.
+ * The admin will share the credentials with the new user.
+ * The user can log in immediately and change their password.
  */
 export async function createUserAction(
   input: CreateUserInput
@@ -127,46 +128,44 @@ export async function createUserAction(
       }
     }
 
-    // Try to invite the user via Supabase Admin API
-    // If they already have an auth account, Supabase will return an error
-    // The inviteUserByEmail sends an email with a link to set their password
-    const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
-      data: {
+    // Create the user with password using Admin API
+    const { data: authData, error: authError } = await adminClient.auth.admin.createUser({
+      email: email,
+      password: input.password,
+      email_confirm: true, // Auto-confirm email so they can log in immediately
+      user_metadata: {
         full_name: input.full_name,
         organization_id: user.organizationId,
         role: input.role || 'mechanic',
         phone: input.phone || null,
       },
-      // Use the same origin resolution as other auth flows for consistency
-      redirectTo: `${getAppOrigin()}/auth/callback?type=invite`,
     });
 
-    if (inviteError) {
+    if (authError) {
       // Handle specific error cases
-      if (inviteError.message?.includes('already registered') || inviteError.message?.includes('already been invited')) {
+      if (authError.message?.includes('already registered') || authError.message?.includes('User already registered')) {
         return {
           success: false,
-          error: 'This email is already registered or has a pending invitation.',
+          error: 'This email is already registered.',
         };
       }
 
       return {
         success: false,
-        error: `Failed to send invitation: ${inviteError.message}`,
+        error: `Failed to create user: ${authError.message}`,
       };
     }
 
-    if (!inviteData.user) {
+    if (!authData.user) {
       return {
         success: false,
-        error: 'Failed to create user invitation.',
+        error: 'Failed to create user account.',
       };
     }
 
     // Create the user profile immediately
-    // This ensures the profile exists when they accept the invitation
     const createResult = await repository.create({
-      id: inviteData.user.id,
+      id: authData.user.id,
       organization_id: user.organizationId,
       email: email,
       full_name: input.full_name,
@@ -176,7 +175,7 @@ export async function createUserAction(
 
     if (!createResult.success) {
       // Profile creation failed - try to clean up the auth user
-      await adminClient.auth.admin.deleteUser(inviteData.user.id);
+      await adminClient.auth.admin.deleteUser(authData.user.id);
       return {
         success: false,
         error: `Failed to create user profile: ${createResult.error}`,
@@ -187,7 +186,7 @@ export async function createUserAction(
 
     return {
       success: true,
-      data: { id: inviteData.user.id },
+      data: { id: authData.user.id },
     };
   } catch (error) {
     return failure(error, 'Failed to create user');
@@ -286,5 +285,133 @@ export async function reactivateUserAction(id: string): Promise<Result<void>> {
     return result.success ? { success: true, data: undefined } : result;
   } catch (error) {
     return failure(error, 'Failed to reactivate user');
+  }
+}
+
+/**
+ * Delete a user permanently.
+ * This removes the user from both auth.users and user_profiles.
+ *
+ * IMPORTANT: Only use for cleaning up failed invitations or test users.
+ * For normal operations, use deactivate instead (soft delete).
+ */
+export async function deleteUserAction(id: string): Promise<Result<void>> {
+  try {
+    const { repository, user } = await getRepository();
+    const adminClient = createAdminClient();
+
+    // Only admins can delete users
+    if (user.role !== 'admin') {
+      return {
+        success: false,
+        error: 'Only admins can delete users',
+      };
+    }
+
+    // Prevent self-deletion
+    if (id === user.id) {
+      return {
+        success: false,
+        error: 'You cannot delete yourself',
+      };
+    }
+
+    // Check if user has any activity (created records, etc.)
+    // For now, we'll allow deletion but in production you might want to check:
+    // - created_by references
+    // - assigned records
+    // - transaction history
+    // If they have activity, force them to deactivate instead
+
+    // Delete user profile first
+    const deleteResult = await repository.delete(id);
+
+    if (!deleteResult.success) {
+      return deleteResult;
+    }
+
+    // Delete from auth.users (this also deletes the session)
+    const { error: authError } = await adminClient.auth.admin.deleteUser(id);
+
+    if (authError) {
+      return {
+        success: false,
+        error: `Failed to delete auth user: ${authError.message}`,
+      };
+    }
+
+    revalidatePath('/team');
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    return failure(error, 'Failed to delete user');
+  }
+}
+
+/**
+ * Resend invitation email to a user who hasn't accepted yet.
+ *
+ * This generates a new magic link for users whose invite expired or was lost.
+ * The user must not have logged in yet (should still be in invited state).
+ */
+export async function resendInviteAction(id: string): Promise<Result<void>> {
+  try {
+    const { repository, user } = await getRepository();
+    const adminClient = createAdminClient();
+
+    // Only admins can resend invites
+    if (user.role !== 'admin') {
+      return {
+        success: false,
+        error: 'Only admins can resend invitations',
+      };
+    }
+
+    // Get the user to resend invite to
+    const userResult = await repository.getById(id);
+
+    if (!userResult.success) {
+      return {
+        success: false,
+        error: 'User not found',
+      };
+    }
+
+    const invitedUser = userResult.data;
+
+    // Generate a new invite link using admin API
+    // This will send a new email with a fresh token
+    const { error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(
+      invitedUser.email,
+      {
+        data: {
+          full_name: invitedUser.full_name,
+          organization_id: invitedUser.organization_id,
+          role: invitedUser.role,
+          phone: invitedUser.phone,
+        },
+        redirectTo: `${getAppOrigin()}/auth/callback?type=invite`,
+      }
+    );
+
+    if (inviteError) {
+      // If user already confirmed their email, they don't need a new invite
+      if (inviteError.message?.includes('already registered') ||
+          inviteError.message?.includes('User already registered')) {
+        return {
+          success: false,
+          error: 'This user has already accepted their invitation and set a password. They can log in directly.',
+        };
+      }
+
+      return {
+        success: false,
+        error: `Failed to resend invitation: ${inviteError.message}`,
+      };
+    }
+
+    return { success: true, data: undefined };
+  } catch (error) {
+    return failure(error, 'Failed to resend invitation');
   }
 }

@@ -43,8 +43,22 @@ export function UserForm({ user }: UserFormProps) {
   const [email, setEmail] = useState(user?.email || '');
   const [phone, setPhone] = useState(user?.phone || '');
   const [role, setRole] = useState<UserRole>(user?.role || 'mechanic');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const isEdit = !!user;
+
+  // Generate a random password
+  const generatePassword = () => {
+    const length = 12;
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+    let generatedPassword = '';
+    for (let i = 0; i < length; i++) {
+      generatedPassword += charset.charAt(Math.floor(Math.random() * charset.length));
+    }
+    setPassword(generatedPassword);
+    setShowPassword(true);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +81,24 @@ export function UserForm({ user }: UserFormProps) {
       return;
     }
 
+    if (!isEdit && !password.trim()) {
+      toast({
+        title: 'Validation error',
+        description: 'Password is required',
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (!isEdit && password.length < 8) {
+      toast({
+        title: 'Validation error',
+        description: 'Password must be at least 8 characters',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     startTransition(async () => {
       const result = isEdit
         ? await updateUserAction(user.id, {
@@ -79,6 +111,7 @@ export function UserForm({ user }: UserFormProps) {
             full_name: fullName.trim(),
             phone: phone.trim() || undefined,
             role,
+            password: password.trim(),
           });
 
       if (result.success) {
@@ -86,7 +119,8 @@ export function UserForm({ user }: UserFormProps) {
           title: 'Success',
           description: isEdit
             ? 'User updated successfully'
-            : 'Invitation sent! The user will receive an email to set their password.',
+            : `User created! Share these credentials: Email: ${email}, Password: ${password}`,
+          duration: 10000, // Show for 10 seconds so admin can copy
         });
         router.push('/team');
         router.refresh();
@@ -104,11 +138,11 @@ export function UserForm({ user }: UserFormProps) {
     <form onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>{isEdit ? 'Edit User' : 'Invite Team Member'}</CardTitle>
+          <CardTitle>{isEdit ? 'Edit User' : 'Add Team Member'}</CardTitle>
           <CardDescription>
             {isEdit
               ? 'Update user details and role'
-              : 'Enter the email and details for the new team member. They will receive an invitation email to set their password.'}
+              : 'Create a new user account. You will set their initial password and share it with them.'}
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -142,6 +176,43 @@ export function UserForm({ user }: UserFormProps) {
               </p>
             )}
           </div>
+
+          {!isEdit && (
+            <div className="space-y-2">
+              <Label htmlFor="password">Password *</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Minimum 8 characters"
+                  required
+                  disabled={isPending}
+                  className="flex-1"
+                />
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={generatePassword}
+                  disabled={isPending}
+                >
+                  Generate
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setShowPassword(!showPassword)}
+                  disabled={isPending}
+                >
+                  {showPassword ? 'Hide' : 'Show'}
+                </Button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                You will share this password with the team member. They can change it after logging in.
+              </p>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="phone">Phone (optional)</Label>
@@ -192,7 +263,7 @@ export function UserForm({ user }: UserFormProps) {
             </Button>
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              {isEdit ? 'Save Changes' : 'Send Invitation'}
+              {isEdit ? 'Save Changes' : 'Create User'}
             </Button>
           </div>
         </CardContent>

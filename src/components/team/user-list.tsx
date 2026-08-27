@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useTransition } from 'react';
 import Link from 'next/link';
-import { Search, Mail, Phone, Pencil, UserX, UserCheck } from 'lucide-react';
+import { Search, Mail, Phone, Pencil, UserX, UserCheck, Trash2, MailPlus } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -18,7 +18,7 @@ import {
 import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 import { MoreVertical } from 'lucide-react';
 import { ROLE_LABELS, ROLE_VARIANTS, ROLE_DESCRIPTIONS } from '@/features/users/labels';
-import { deactivateUserAction, reactivateUserAction } from '@/app/actions/users';
+import { deactivateUserAction, reactivateUserAction, deleteUserAction, resendInviteAction } from '@/app/actions/users';
 import type { User } from '@/features/users/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -126,6 +126,8 @@ export function UserList({ users }: UserListProps) {
 function UserActions({ user }: { user: User }) {
   const [deactivateDialogOpen, setDeactivateDialogOpen] = useState(false);
   const [reactivateDialogOpen, setReactivateDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [resendDialogOpen, setResendDialogOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
@@ -164,6 +166,40 @@ function UserActions({ user }: { user: User }) {
     });
   };
 
+  const handleDelete = () => {
+    setError(null);
+    startTransition(async () => {
+      const result = await deleteUserAction(user.id);
+
+      if (!result.success) {
+        setError(result.error);
+      } else {
+        setDeleteDialogOpen(false);
+        toast({
+          title: 'User deleted',
+          description: `${user.full_name} has been permanently deleted.`,
+        });
+      }
+    });
+  };
+
+  const handleResendInvite = () => {
+    setError(null);
+    startTransition(async () => {
+      const result = await resendInviteAction(user.id);
+
+      if (!result.success) {
+        setError(result.error);
+      } else {
+        setResendDialogOpen(false);
+        toast({
+          title: 'Invitation resent',
+          description: `A new invitation email has been sent to ${user.email}.`,
+        });
+      }
+    });
+  };
+
   return (
     <>
       <DropdownMenu>
@@ -181,6 +217,10 @@ function UserActions({ user }: { user: User }) {
               Edit user
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setResendDialogOpen(true)}>
+            <MailPlus className="mr-2 h-4 w-4" />
+            Resend invite
+          </DropdownMenuItem>
           {user.is_active ? (
             <DropdownMenuItem onClick={() => setDeactivateDialogOpen(true)}>
               <UserX className="mr-2 h-4 w-4" />
@@ -192,6 +232,14 @@ function UserActions({ user }: { user: User }) {
               Reactivate
             </DropdownMenuItem>
           )}
+          <DropdownMenuSeparator />
+          <DropdownMenuItem
+            onClick={() => setDeleteDialogOpen(true)}
+            className="text-destructive focus:text-destructive"
+          >
+            <Trash2 className="mr-2 h-4 w-4" />
+            Delete permanently
+          </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
@@ -218,6 +266,38 @@ function UserActions({ user }: { user: User }) {
         isPending={isPending}
         error={error}
         onConfirm={handleReactivate}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        title="Delete user permanently"
+        description={`Are you sure you want to permanently delete ${user.full_name}? This action cannot be undone. All their data and history will be removed.`}
+        confirmLabel="Delete permanently"
+        destructive
+        isPending={isPending}
+        error={error}
+        onConfirm={handleDelete}
+      >
+        <div className="rounded-md bg-destructive/10 p-3 text-sm">
+          <p className="font-semibold text-destructive">Warning: This action is irreversible!</p>
+          <p className="mt-1 text-muted-foreground">
+            Consider deactivating the user instead to preserve their data.
+          </p>
+        </div>
+      </ConfirmDialog>
+
+      {/* Resend Invite Confirmation Dialog */}
+      <ConfirmDialog
+        open={resendDialogOpen}
+        onOpenChange={setResendDialogOpen}
+        title="Resend invitation"
+        description={`Send a new invitation email to ${user.email}? This will generate a fresh link if their previous invite expired.`}
+        confirmLabel="Resend invite"
+        isPending={isPending}
+        error={error}
+        onConfirm={handleResendInvite}
       />
     </>
   );
