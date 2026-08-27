@@ -126,6 +126,11 @@ export async function createUserAction(
       }
     }
 
+    // Determine the redirect URL for the invitation
+    // Priority: NEXT_PUBLIC_APP_URL > Vercel URL > localhost
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL ||
+                    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+
     // Try to invite the user via Supabase Admin API
     // If they already have an auth account, Supabase will return an error
     const { data: inviteData, error: inviteError } = await adminClient.auth.admin.inviteUserByEmail(email, {
@@ -135,7 +140,7 @@ export async function createUserAction(
         role: input.role || 'mechanic',
         phone: input.phone || null,
       },
-      redirectTo: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/auth/callback?type=invite`,
+      redirectTo: `${baseUrl}/auth/callback?type=invite`,
     });
 
     if (inviteError) {
