@@ -182,6 +182,26 @@ export async function createUserAction(
       };
     }
 
+    // CRITICAL: Update the user's JWT app_metadata with organization_id and role
+    // This prevents redirect loops - middleware checks app_metadata.organization_id
+    // Without this, the new user's JWT has no org claim and they get stuck in
+    // a redirect loop between /onboarding/setup and /dashboard
+    const { error: updateError } = await adminClient.auth.admin.updateUserById(
+      authData.user.id,
+      {
+        app_metadata: {
+          organization_id: user.organizationId,
+          role: input.role || 'mechanic',
+        },
+      }
+    );
+
+    if (updateError) {
+      console.error('Failed to update user metadata:', updateError);
+      // Don't fail the whole operation - user can still log in after token refresh
+      // The profile exists and is correct, JWT just needs to refresh
+    }
+
     revalidatePath('/team');
 
     return {
