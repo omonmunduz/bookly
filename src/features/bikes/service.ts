@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { BikesRepository } from './repository';
+import { AuditService } from '@/features/audit/service';
 import {
   createBikeSchema,
   updateBikeSchema,
@@ -23,12 +24,14 @@ import type {
  */
 export class BikesService {
   private repository: BikesRepository;
+  private auditService: AuditService;
 
   constructor(
     private supabase: SupabaseClient,
     private organizationId: string
   ) {
     this.repository = new BikesRepository(supabase);
+    this.auditService = new AuditService(supabase, organizationId);
   }
 
   /**
@@ -138,6 +141,18 @@ export class BikesService {
         userId
       );
 
+      // Audit log
+      await this.auditService.logBikeCreated(
+        userId,
+        bike.id,
+        bike.bike_number,
+        {
+          model: bike.model,
+          status: bike.status,
+          purchase_price: bike.purchase_price || undefined,
+        }
+      );
+
       return { success: true, data: bike };
     } catch (error) {
       return {
@@ -227,8 +242,9 @@ export class BikesService {
         return { success: false, error: 'Bike not found' };
       }
 
-      // Business rule: Cannot manually change status to 'assigned'
-      // Assignments are created through BikeAssignmentsService
+      // Business rule: Cannot manually change status to 'assigned' or 'returned'
+      // - 'assigned' is set through BikeAssignmentsService
+      // - 'returned' is set through bike return workflow
       if (status === 'assigned') {
         return {
           success: false,
@@ -237,14 +253,31 @@ export class BikesService {
         };
       }
 
-      // Business rule: Cannot change status away from 'assigned' without
-      // returning. The guard above already rejected status === 'assigned', so
-      // reaching here with an assigned bike always means a move away from it.
+      if (status === 'returned') {
+        return {
+          success: false,
+          error:
+            'Cannot manually set bike to "returned" status. Use bike return workflow.',
+        };
+      }
+
+      // Business rule: Cannot change status away from 'assigned' or 'returned' without
+      // going through proper workflow.
+      // - 'assigned' bikes must be returned through AssignmentsService
+      // - 'returned' bikes must be inspected (inspection sets final status)
       if (existingBike.status === 'assigned') {
         return {
           success: false,
           error:
             'Cannot change status of an assigned bike. Return the bike first.',
+        };
+      }
+
+      if (existingBike.status === 'returned') {
+        return {
+          success: false,
+          error:
+            'Cannot change status of a returned bike. Perform inspection to determine final status.',
         };
       }
 
@@ -260,6 +293,16 @@ export class BikesService {
         id,
         updateData,
         this.organizationId
+      );
+
+      // Audit log
+      await this.auditService.logBikeStatusChanged(
+        existingBike.created_by || 'system', // fallback if created_by is null
+        bike.id,
+        bike.bike_number,
+        existingBike.status,
+        status,
+        notes
       );
 
       return { success: true, data: bike };
@@ -342,6 +385,26 @@ export class BikesService {
           error instanceof Error
             ? error.message
             : 'Failed to get bikes needing maintenance',
+      };
+    }
+  }
+
+  /**
+   * Get bikes awaiting inspection (returned status)
+   */
+  async getAwaitingInspection(): Promise<Result<Bike[]>> {
+    try {
+      const bikes = await this.repository.getAwaitingInspection(
+        this.organizationId
+      );
+      return { success: true, data: bikes };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to get bikes awaiting inspection',
       };
     }
   }

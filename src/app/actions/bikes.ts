@@ -122,6 +122,20 @@ export async function getBikesNeedingMaintenanceAction(): Promise<
 }
 
 /**
+ * Bikes awaiting inspection after return (returned status).
+ */
+export async function getBikesAwaitingInspectionAction(): Promise<
+  Result<Bike[]>
+> {
+  try {
+    const { service } = await getService();
+    return await service.getAwaitingInspection();
+  } catch (error) {
+    return failure(error, 'Failed to get bikes awaiting inspection');
+  }
+}
+
+/**
  * Fleet counts per status, for the dashboard.
  */
 export async function getBikeCountByStatusAction(): Promise<

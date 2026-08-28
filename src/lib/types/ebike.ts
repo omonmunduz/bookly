@@ -11,7 +11,7 @@
 // ENUMS
 // ============================================================================
 
-export type BikeStatus = 'available' | 'assigned' | 'maintenance' | 'damaged' | 'retired';
+export type BikeStatus = 'available' | 'assigned' | 'returned' | 'maintenance' | 'damaged' | 'retired';
 export type CourierStatus = 'active' | 'inactive' | 'suspended';
 export type DurationUnit = 'days' | 'weeks' | 'months';
 export type EarningsStatus = 'draft' | 'approved' | 'paid';

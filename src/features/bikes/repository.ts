@@ -197,6 +197,7 @@ export class BikesRepository {
     const counts: Record<BikeStatus, number> = {
       available: 0,
       assigned: 0,
+      returned: 0,
       maintenance: 0,
       damaged: 0,
       retired: 0,
@@ -280,6 +281,22 @@ export class BikesRepository {
       .in('status', ['maintenance', 'damaged'])
       .is('deleted_at', null)
       .order('updated_at', { ascending: false });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  /**
+   * Get bikes awaiting inspection (returned status)
+   */
+  async getAwaitingInspection(organizationId: OrganizationId): Promise<Bike[]> {
+    const { data, error } = await this.supabase
+      .from('bikes')
+      .select('*')
+      .eq('organization_id', organizationId)
+      .eq('status', 'returned')
+      .is('deleted_at', null)
+      .order('updated_at', { ascending: true }); // Oldest first (most urgent)
 
     if (error) throw error;
     return data || [];

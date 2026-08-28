@@ -3,6 +3,7 @@ import { BikeAssignmentsRepository } from './repository';
 import { BikesRepository } from '../bikes/repository';
 import { CouriersRepository } from '../couriers/repository';
 import { RentalPlansRepository } from '../rental-plans/repository';
+import { AuditService } from '@/features/audit/service';
 import {
   createAssignmentSchema,
   returnAssignmentSchema,
@@ -33,6 +34,7 @@ export class AssignmentsService {
   private bikesRepo: BikesRepository;
   private couriersRepo: CouriersRepository;
   private plansRepo: RentalPlansRepository;
+  private auditService: AuditService;
 
   constructor(
     private supabase: SupabaseClient,
@@ -42,6 +44,7 @@ export class AssignmentsService {
     this.bikesRepo = new BikesRepository(supabase);
     this.couriersRepo = new CouriersRepository(supabase);
     this.plansRepo = new RentalPlansRepository(supabase);
+    this.auditService = new AuditService(supabase, organizationId);
   }
 
   /**
@@ -187,6 +190,18 @@ export class AssignmentsService {
         userId
       );
 
+      // Audit log
+      await this.auditService.logAssignmentCreated(
+        userId,
+        assignment.id,
+        {
+          bike_number: bike.bike_number,
+          courier_name: courier.full_name,
+          plan_name: plan.name,
+          plan_price: plan.price,
+        }
+      );
+
       return { success: true, data: assignment };
     } catch (error) {
       console.error('Assignment creation error:', error);
@@ -242,6 +257,29 @@ export class AssignmentsService {
         this.organizationId,
         userId
       );
+
+      // Get bike and courier info for audit log
+      const bike = await this.bikesRepo.getById(
+        existingAssignment.bike_id,
+        this.organizationId
+      );
+      const courier = await this.couriersRepo.getById(
+        existingAssignment.courier_id,
+        this.organizationId
+      );
+
+      // Audit log
+      if (bike && courier) {
+        await this.auditService.logAssignmentReturned(
+          userId,
+          assignment.id,
+          {
+            bike_number: bike.bike_number,
+            courier_name: courier.full_name,
+            condition_at_return: validatedInput.condition_at_return,
+          }
+        );
+      }
 
       return { success: true, data: assignment };
     } catch (error) {

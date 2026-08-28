@@ -8,13 +8,14 @@
 
 import { Suspense } from 'react';
 import Link from 'next/link';
-import { Plus, Bike, Users, Wrench, DollarSign, AlertTriangle } from 'lucide-react';
+import { Plus, Bike, Users, Wrench, DollarSign, AlertTriangle, ClipboardCheck } from 'lucide-react';
 
 import { requireActiveUser } from '@/features/auth/guards';
 import {
   getBikeCountByStatusAction,
   getAvailableBikesAction,
   getBikesNeedingMaintenanceAction,
+  getBikesAwaitingInspectionAction,
 } from '@/app/actions/bikes';
 import { getActiveCouriersAction } from '@/app/actions/couriers';
 import {
@@ -26,6 +27,7 @@ import { getMaintenancePendingApprovalAction } from '@/app/actions/maintenance';
 import { MetricCard } from '@/components/shared/MetricCard';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { BikesAwaitingInspectionWidget } from '@/components/ebike/BikesAwaitingInspectionWidget';
 
 export const metadata = {
   title: 'Dashboard',
@@ -49,13 +51,13 @@ export default async function DashboardPage() {
       </header>
 
       <Suspense fallback={<MetricsSkeleton />}>
-        <DashboardContent />
+        <DashboardContent userRole={user.role} />
       </Suspense>
     </div>
   );
 }
 
-async function DashboardContent() {
+async function DashboardContent({ userRole }: { userRole: string }) {
   // Fetch all metrics in parallel
   const [
     bikeCountsResult,
@@ -66,6 +68,7 @@ async function DashboardContent() {
     overdueAssignmentsResult,
     earningsCountsResult,
     pendingApprovalsResult,
+    bikesAwaitingInspectionResult,
   ] = await Promise.all([
     getBikeCountByStatusAction(),
     getAvailableBikesAction(),
@@ -75,6 +78,7 @@ async function DashboardContent() {
     getOverdueAssignmentsAction(0),
     getEarningsCountByStatusAction(),
     getMaintenancePendingApprovalAction(),
+    getBikesAwaitingInspectionAction(),
   ]);
 
   const bikeCounts = bikeCountsResult.success ? bikeCountsResult.data : null;
@@ -85,18 +89,32 @@ async function DashboardContent() {
   const overdueAssignments = overdueAssignmentsResult.success ? overdueAssignmentsResult.data : [];
   const earningsCounts = earningsCountsResult.success ? earningsCountsResult.data : null;
   const pendingApprovals = pendingApprovalsResult.success ? pendingApprovalsResult.data.length : 0;
+  const bikesAwaitingInspection = bikesAwaitingInspectionResult.success ? bikesAwaitingInspectionResult.data : [];
 
   const totalBikes = bikeCounts
-    ? bikeCounts.available + bikeCounts.assigned + bikeCounts.maintenance + bikeCounts.damaged + bikeCounts.retired
+    ? bikeCounts.available + bikeCounts.assigned + bikeCounts.returned + bikeCounts.maintenance + bikeCounts.damaged + bikeCounts.retired
     : 0;
 
   const utilizationRate = totalBikes > 0 && bikeCounts
-    ? Math.round((bikeCounts.assigned / (bikeCounts.available + bikeCounts.assigned)) * 100)
+    ? Math.round((bikeCounts.assigned / (bikeCounts.available + bikeCounts.assigned + bikeCounts.returned)) * 100)
     : 0;
 
   return (
     <div className="space-y-6">
       {/* Alerts */}
+      {bikesAwaitingInspection.length > 0 && (
+        <Alert>
+          <ClipboardCheck className="h-4 w-4" />
+          <AlertTitle>Bikes Awaiting Inspection</AlertTitle>
+          <AlertDescription>
+            {bikesAwaitingInspection.length} bike{bikesAwaitingInspection.length === 1 ? '' : 's'} returned and waiting for inspection.
+            <Link href="/bikes?status=returned" className="ml-2 underline">
+              View queue
+            </Link>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {overdueAssignments.length > 0 && (
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
@@ -161,10 +179,13 @@ async function DashboardContent() {
       </section>
 
       {/* Quick Actions */}
-      <QuickActions />
+      <QuickActions userRole={userRole} />
 
       {/* Bike Fleet Status */}
       <div className="grid gap-4 lg:grid-cols-2">
+        {bikesAwaitingInspection.length > 0 && (
+          <BikesAwaitingInspectionWidget bikes={bikesAwaitingInspection} />
+        )}
         <BikeFleetStatus bikeCounts={bikeCounts} totalBikes={totalBikes} />
         <RecentActivity
           activeAssignments={activeAssignments}
@@ -176,7 +197,9 @@ async function DashboardContent() {
   );
 }
 
-function QuickActions() {
+function QuickActions({ userRole }: { userRole: string }) {
+  const isMechanic = userRole === 'mechanic';
+
   return (
     <section aria-label="Quick actions" className="flex flex-wrap gap-2">
       <Button asChild>
@@ -185,18 +208,22 @@ function QuickActions() {
           Assign Bike
         </Link>
       </Button>
-      <Button variant="outline" asChild>
-        <Link href="/couriers/new">
-          <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
-          New Courier
-        </Link>
-      </Button>
-      <Button variant="outline" asChild>
-        <Link href="/bikes/new">
-          <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
-          Add Bike
-        </Link>
-      </Button>
+      {!isMechanic && (
+        <>
+          <Button variant="outline" asChild>
+            <Link href="/couriers/new">
+              <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+              New Courier
+            </Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/bikes/new">
+              <Plus className="mr-2 h-4 w-4" aria-hidden="true" />
+              Add Bike
+            </Link>
+          </Button>
+        </>
+      )}
     </section>
   );
 }
@@ -220,6 +247,7 @@ function BikeFleetStatus({
   const statuses = [
     { label: 'Available', value: bikeCounts.available, color: 'text-success' },
     { label: 'Assigned', value: bikeCounts.assigned, color: 'text-blue-600' },
+    { label: 'Returned', value: bikeCounts.returned, color: 'text-warning' },
     { label: 'Maintenance', value: bikeCounts.maintenance, color: 'text-warning' },
     { label: 'Damaged', value: bikeCounts.damaged, color: 'text-destructive' },
     { label: 'Retired', value: bikeCounts.retired, color: 'text-muted-foreground' },

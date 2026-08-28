@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { MaintenanceRepository } from './repository';
 import { BikesRepository } from '../bikes/repository';
+import { AuditService } from '@/features/audit/service';
 import {
   createMaintenanceRecordSchema,
   approveMaintenanceSchema,
@@ -25,6 +26,7 @@ import type {
 export class MaintenanceService {
   private repository: MaintenanceRepository;
   private bikesRepo: BikesRepository;
+  private auditService: AuditService;
 
   constructor(
     private supabase: SupabaseClient,
@@ -32,6 +34,7 @@ export class MaintenanceService {
   ) {
     this.repository = new MaintenanceRepository(supabase);
     this.bikesRepo = new BikesRepository(supabase);
+    this.auditService = new AuditService(supabase, organizationId);
   }
 
   // ============================================================================
@@ -122,12 +125,15 @@ export class MaintenanceService {
         return { success: false, error: 'Bike not found' };
       }
 
-      // Business rule: Cannot perform maintenance on assigned bikes
-      if (bike.status === 'assigned') {
+      // Business rule: Cannot perform maintenance on retired bikes
+      // (Maintenance is allowed on bikes in any other status, including assigned,
+      // returned, maintenance, and damaged — real-world scenario: courier reports
+      // damage while bike is still assigned)
+      if (bike.status === 'retired') {
         return {
           success: false,
           error:
-            'Cannot create maintenance record for an assigned bike. Return the bike first.',
+            'Cannot create maintenance record for a retired bike.',
         };
       }
 
@@ -152,6 +158,18 @@ export class MaintenanceService {
         },
         this.organizationId,
         userId
+      );
+
+      // Audit log
+      await this.auditService.logMaintenanceCreated(
+        userId,
+        record.id,
+        {
+          bike_number: bike.bike_number,
+          maintenance_type: record.maintenance_type,
+          description: record.description,
+          cost: record.cost || undefined,
+        }
       );
 
       return { success: true, data: record };
@@ -219,6 +237,25 @@ export class MaintenanceService {
         this.organizationId,
         managerId
       );
+
+      // Get bike info for audit log
+      const bike = await this.bikesRepo.getById(
+        existingRecord.bike_id,
+        this.organizationId
+      );
+
+      // Audit log
+      if (bike) {
+        await this.auditService.logMaintenanceApproved(
+          managerId,
+          record.id,
+          {
+            bike_number: bike.bike_number,
+            maintenance_type: record.maintenance_type,
+            cost: record.cost || undefined,
+          }
+        );
+      }
 
       return { success: true, data: record };
     } catch (error) {
@@ -364,12 +401,14 @@ export class MaintenanceService {
         return { success: false, error: 'Bike not found' };
       }
 
-      // Business rule: Cannot inspect assigned bikes
-      if (bike.status === 'assigned') {
+      // Business rule: Cannot inspect retired bikes
+      // (Inspection is allowed on bikes in any other status, including assigned,
+      // returned, maintenance, and damaged — inspection determines next status)
+      if (bike.status === 'retired') {
         return {
           success: false,
           error:
-            'Cannot inspect an assigned bike. Return the bike first or perform inspection during assignment/return.',
+            'Cannot inspect a retired bike.',
         };
       }
 
@@ -379,6 +418,18 @@ export class MaintenanceService {
         validatedInput,
         this.organizationId,
         userId
+      );
+
+      // Audit log
+      await this.auditService.logInspectionCreated(
+        userId,
+        inspection.id,
+        {
+          bike_number: bike.bike_number,
+          overall_condition: inspection.overall_condition,
+          next_status: inspection.next_status,
+          requires_maintenance: inspection.requires_maintenance,
+        }
       );
 
       return { success: true, data: inspection };
