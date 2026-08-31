@@ -9,11 +9,16 @@ import { z } from 'zod';
 export const earningsStatusEnum = z.enum(['draft', 'approved', 'paid']);
 export const deductionTypeEnum = z.enum(['rental', 'damage', 'equipment', 'other']);
 
+export const createIncomeEntrySchema = z.object({
+  earnings_period_id: z.string().uuid('Invalid earnings period ID'),
+  amount: z.number().min(0.01, 'Amount must be greater than zero'),
+  notes: z.string().trim().max(500).nullable().optional(),
+});
+
 export const createEarningsPeriodSchema = z.object({
   courier_id: z.string().uuid('Invalid courier ID'),
   period_start: z.string().date('Invalid start date'),
   period_end: z.string().date('Invalid end date'),
-  gross_earnings: z.number().min(0, 'Earnings must be positive'),
   status: earningsStatusEnum.optional(),
   notes: z.string().trim().max(1000).nullable().optional(),
 }).refine(
@@ -29,7 +34,6 @@ export const createEarningsPeriodSchema = z.object({
 );
 
 export const updateEarningsPeriodSchema = z.object({
-  gross_earnings: z.number().min(0).optional(),
   status: earningsStatusEnum.optional(),
   paid_at: z.string().datetime().nullable().optional(),
   notes: z.string().trim().max(1000).nullable().optional(),
@@ -50,6 +54,7 @@ export const earningsFiltersSchema = z.object({
   endDate: z.string().date().optional(),
 });
 
+export type CreateIncomeEntryInput = z.infer<typeof createIncomeEntrySchema>;
 export type CreateEarningsPeriodInput = z.infer<typeof createEarningsPeriodSchema>;
 export type UpdateEarningsPeriodInput = z.infer<typeof updateEarningsPeriodSchema>;
 export type CreateDeductionInput = z.infer<typeof createDeductionSchema>;

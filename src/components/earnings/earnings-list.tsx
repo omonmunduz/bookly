@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
+import { MarkAsPaidButton } from '@/components/earnings/mark-as-paid-button';
 import {
   EARNINGS_STATUS_LABELS,
   EARNINGS_STATUS_VARIANT,
@@ -89,6 +90,13 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
                     <Badge variant={EARNINGS_STATUS_VARIANT[period.status]}>
                       {EARNINGS_STATUS_LABELS[period.status]}
                     </Badge>
+                    <MarkAsPaidButton
+                      periodId={period.id}
+                      netPayout={period.net_payout}
+                      courierName={courierNames.get(period.courier_id) ?? 'Courier'}
+                      status={period.status}
+                      variant="icon"
+                    />
                     <Button variant="ghost" size="icon" asChild>
                       <Link href={`/earnings/${period.id}/edit`}>
                         <Pencil className="h-4 w-4" />

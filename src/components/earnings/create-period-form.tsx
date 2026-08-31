@@ -22,9 +22,8 @@ interface CreateEarningsPeriodFormProps {
 /**
  * Create an earnings period for a courier.
  *
- * The figure entered here is gross_earnings — what the courier billed before
- * deductions. Deductions are added afterwards on the detail page, and the database
- * derives net_payout from the two, which is why there is no net field on this form.
+ * The period starts with zero income entries. Income is added incrementally
+ * after creation using the "Add Income" action on the edit page.
  *
  * Dates cannot be edited after creation (the update schema omits them), so the
  * range is validated before submit rather than left to be corrected later.
@@ -43,14 +42,7 @@ export function CreateEarningsPeriodForm({
     const formData = new FormData(event.currentTarget);
     const periodStart = formData.get('period_start') as string;
     const periodEnd = formData.get('period_end') as string;
-    const rawEarnings = (formData.get('gross_earnings') as string)?.trim();
     const notes = (formData.get('notes') as string)?.trim();
-
-    const grossEarnings = Number(rawEarnings);
-    if (!rawEarnings || Number.isNaN(grossEarnings) || grossEarnings < 0) {
-      setError('Enter a gross earnings amount of zero or more.');
-      return;
-    }
 
     if (new Date(periodEnd) < new Date(periodStart)) {
       setError('The end date must fall on or after the start date.');
@@ -62,12 +54,11 @@ export function CreateEarningsPeriodForm({
         courier_id: formData.get('courier_id') as string,
         period_start: periodStart,
         period_end: periodEnd,
-        gross_earnings: grossEarnings,
         notes: notes ? notes : undefined,
       });
 
       if (result.success) {
-        router.push(`/earnings/${result.data.id}`);
+        router.push(`/earnings/${result.data.id}/edit`);
       } else {
         setError(result.error);
       }
@@ -134,26 +125,6 @@ export function CreateEarningsPeriodForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="gross_earnings">
-          Gross earnings <span className="text-destructive">*</span>
-        </Label>
-        <Input
-          id="gross_earnings"
-          name="gross_earnings"
-          type="number"
-          step="0.01"
-          min="0"
-          inputMode="decimal"
-          placeholder="0.00"
-          required
-        />
-        <p className="text-xs text-muted-foreground">
-          What the courier earned before deductions. Add deductions after creating
-          the period.
-        </p>
-      </div>
-
-      <div className="space-y-2">
         <Label htmlFor="notes">Notes</Label>
         <Textarea
           id="notes"
@@ -162,6 +133,9 @@ export function CreateEarningsPeriodForm({
           rows={3}
           maxLength={1000}
         />
+        <p className="text-xs text-muted-foreground">
+          After creating the period, add income entries and deductions on the edit page.
+        </p>
       </div>
 
       <div className="flex gap-3">

@@ -215,7 +215,6 @@ export interface CreateEarningsPeriodInput {
   courier_id: string;
   period_start: string;
   period_end: string;
-  gross_earnings: number;
   status?: EarningsStatus;
   notes?: string | null;
 }
@@ -224,6 +223,26 @@ export interface UpdateEarningsPeriodInput {
   gross_earnings?: number;
   status?: EarningsStatus;
   paid_at?: string | null;
+  notes?: string | null;
+}
+
+// ============================================================================
+// INCOME ENTRY
+// ============================================================================
+
+export interface IncomeEntry {
+  id: string;
+  organization_id: string;
+  earnings_period_id: string;
+  amount: number;
+  notes: string | null;
+  created_by: string | null;
+  created_at: string;
+}
+
+export interface CreateIncomeEntryInput {
+  earnings_period_id: string;
+  amount: number;
   notes?: string | null;
 }
 
@@ -251,6 +270,41 @@ export interface CreateDeductionInput {
   reference_id?: string | null;
 }
 
+// ============================================================================
+// EARNINGS ACTIVITY (AUDIT TRAIL)
+// ============================================================================
+
+export type EarningsActivityType =
+  | 'period_created'
+  | 'period_updated'
+  | 'period_deleted'
+  | 'status_changed'
+  | 'marked_as_paid'
+  | 'income_added'
+  | 'income_deleted'
+  | 'deduction_added'
+  | 'deduction_deleted';
+
+export interface EarningsActivity {
+  id: string;
+  organization_id: string;
+  earnings_period_id: string;
+  activity_type: EarningsActivityType;
+  actor_id: string;
+  details: Record<string, any> | null;
+  created_at: string;
+}
+
+/**
+ * Earnings activity with actor information joined in.
+ */
+export interface EarningsActivityWithActor extends EarningsActivity {
+  actor: {
+    full_name: string;
+    email: string;
+  };
+}
+
 /**
  * An earnings period with its courier and deductions joined in, as returned by
  * EarningsRepository.getWithDeductions.
@@ -265,6 +319,8 @@ export interface EarningsPeriodWithDeductions extends EarningsPeriod {
     phone: string | null;
   };
   deductions: Deduction[];
+  income_entries: IncomeEntry[];
+  activity: EarningsActivityWithActor[];
 }
 
 /**

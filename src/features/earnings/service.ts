@@ -4,14 +4,17 @@ import { CouriersRepository } from '../couriers/repository';
 import {
   createEarningsPeriodSchema,
   updateEarningsPeriodSchema,
+  createIncomeEntrySchema,
   createDeductionSchema,
   earningsFiltersSchema,
 } from './schemas';
 import type {
   EarningsPeriod,
+  IncomeEntry,
   Deduction,
   CreateEarningsPeriodInput,
   UpdateEarningsPeriodInput,
+  CreateIncomeEntryInput,
   CreateDeductionInput,
   EarningsFilters,
   EarningsPeriodWithDeductions,
@@ -165,15 +168,7 @@ export class EarningsService {
         };
       }
 
-      // Business rule: Validate gross_earnings is non-negative
-      if (validatedInput.gross_earnings < 0) {
-        return {
-          success: false,
-          error: 'Gross earnings cannot be negative',
-        };
-      }
-
-      // Create period
+      // Create period (starts with zero gross_earnings, income entries added later)
       const period = await this.repository.create(
         validatedInput,
         this.organizationId,
@@ -188,6 +183,116 @@ export class EarningsService {
           error instanceof Error
             ? error.message
             : 'Failed to create earnings period',
+      };
+    }
+  }
+
+  /**
+   * Add income to an earnings period
+   */
+  async addIncome(
+    input: CreateIncomeEntryInput,
+    userId: string
+  ): Promise<Result<IncomeEntry>> {
+    try {
+      // Validate input
+      const validation = createIncomeEntrySchema.safeParse(input);
+      if (!validation.success) {
+        return {
+          success: false,
+          error: validation.error.errors[0]?.message || 'Invalid input',
+        };
+      }
+
+      const validatedInput = validation.data;
+
+      // Check earnings period exists
+      const period = await this.repository.getById(
+        validatedInput.earnings_period_id,
+        this.organizationId
+      );
+      if (!period) {
+        return { success: false, error: 'Earnings period not found' };
+      }
+
+      // Business rule: Cannot add income to paid periods
+      if (period.status === 'paid') {
+        return {
+          success: false,
+          error: 'Cannot add income to a paid earnings period',
+        };
+      }
+
+      // Business rule: Validate amount is positive
+      if (validatedInput.amount <= 0) {
+        return {
+          success: false,
+          error: 'Income amount must be greater than zero',
+        };
+      }
+
+      // Create income entry
+      // Note: Repository trigger will auto-recalculate gross_earnings and log activity
+      const incomeEntry = await this.repository.createIncomeEntry(
+        validatedInput,
+        this.organizationId,
+        userId
+      );
+
+      return { success: true, data: incomeEntry };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : 'Failed to add income',
+      };
+    }
+  }
+
+  /**
+   * Delete an income entry
+   */
+  async deleteIncome(id: string): Promise<Result<void>> {
+    try {
+      // Get income entry to check earnings period status
+      const incomeEntries = await this.repository.listIncomeEntries(
+        '',
+        this.organizationId
+      );
+      const incomeEntry = incomeEntries.find((i) => i.id === id);
+
+      if (!incomeEntry) {
+        return { success: false, error: 'Income entry not found' };
+      }
+
+      // Check earnings period status
+      const period = await this.repository.getById(
+        incomeEntry.earnings_period_id,
+        this.organizationId
+      );
+
+      if (!period) {
+        return { success: false, error: 'Earnings period not found' };
+      }
+
+      // Business rule: Cannot delete income from paid periods
+      if (period.status === 'paid') {
+        return {
+          success: false,
+          error: 'Cannot delete income from a paid earnings period',
+        };
+      }
+
+      // Delete income entry
+      // Note: Repository trigger will auto-recalculate gross_earnings and log activity
+      await this.repository.deleteIncomeEntry(id, this.organizationId);
+
+      return { success: true, data: undefined };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error ? error.message : 'Failed to delete income',
       };
     }
   }
@@ -232,17 +337,6 @@ export class EarningsService {
       // period_start or period_end, so an update cannot move a period's dates
       // into another one's range. Overlap is enforced in create(), where the
       // dates are actually set.
-
-      // Business rule: Validate gross_earnings is non-negative
-      if (
-        validatedInput.gross_earnings !== undefined &&
-        validatedInput.gross_earnings < 0
-      ) {
-        return {
-          success: false,
-          error: 'Gross earnings cannot be negative',
-        };
-      }
 
       // Update period
       const period = await this.repository.update(
@@ -515,6 +609,59 @@ export class EarningsService {
           error instanceof Error
             ? error.message
             : 'Failed to count earnings by status',
+      };
+    }
+  }
+
+  /**
+   * Mark an earnings period as paid
+   * Sets status to 'paid' and paid_at to current timestamp
+   */
+  async markAsPaid(id: string): Promise<Result<EarningsPeriod>> {
+    try {
+      // Check period exists
+      const existingPeriod = await this.repository.getById(
+        id,
+        this.organizationId
+      );
+      if (!existingPeriod) {
+        return { success: false, error: 'Earnings period not found' };
+      }
+
+      // Business rule: Period must be approved before marking as paid
+      if (existingPeriod.status === 'draft') {
+        return {
+          success: false,
+          error: 'Period must be approved before marking as paid',
+        };
+      }
+
+      // Business rule: Already paid
+      if (existingPeriod.status === 'paid') {
+        return {
+          success: false,
+          error: 'Period is already marked as paid',
+        };
+      }
+
+      // Mark as paid with current timestamp
+      const period = await this.repository.update(
+        id,
+        {
+          status: 'paid',
+          paid_at: new Date().toISOString(),
+        },
+        this.organizationId
+      );
+
+      return { success: true, data: period };
+    } catch (error) {
+      return {
+        success: false,
+        error:
+          error instanceof Error
+            ? error.message
+            : 'Failed to mark earnings period as paid',
       };
     }
   }

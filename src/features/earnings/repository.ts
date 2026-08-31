@@ -1,8 +1,8 @@
 /**
  * EARNINGS REPOSITORY
  *
- * Data access layer for courier earnings periods and deductions.
- * Handles financial settlement tracking.
+ * Data access layer for courier earnings periods, income entries, deductions,
+ * and activity audit trail. Handles financial settlement tracking.
  */
 
 import type { SupabaseClient } from '@supabase/supabase-js';
@@ -10,8 +10,12 @@ import type {
   EarningsPeriod,
   CreateEarningsPeriodInput,
   UpdateEarningsPeriodInput,
+  IncomeEntry,
+  CreateIncomeEntryInput,
   Deduction,
   CreateDeductionInput,
+  EarningsActivity,
+  EarningsActivityWithActor,
   EarningsStatus,
   OrganizationId,
 } from '@/lib/types/ebike';
@@ -173,6 +177,12 @@ export class EarningsRepository {
 
   /**
    * Check for overlapping periods
+   *
+   * Two periods overlap if:
+   * - existing.period_start <= new.period_end AND
+   * - existing.period_end >= new.period_start
+   *
+   * Adjacent periods (e.g., Aug 12-26 and Aug 27-Sept 4) do NOT overlap.
    */
   async hasOverlappingPeriod(
     courierId: string,
@@ -187,7 +197,8 @@ export class EarningsRepository {
       .eq('courier_id', courierId)
       .eq('organization_id', organizationId)
       .is('deleted_at', null)
-      .or(`period_start.lte.${periodEnd},period_end.gte.${periodStart}`);
+      .lte('period_start', periodEnd)
+      .gte('period_end', periodStart);
 
     if (excludeId) {
       query = query.neq('id', excludeId);
@@ -284,12 +295,20 @@ export class EarningsRepository {
         `
         *,
         courier:courier_id(courier_code, full_name, phone),
-        deductions:deductions(*)
+        deductions:deductions(*),
+        income_entries:income_entries(*),
+        activity:earnings_activity(
+          *,
+          actor:actor_id(full_name, email)
+        )
       `
       )
       .eq('id', id)
       .eq('organization_id', organizationId)
       .is('deleted_at', null)
+      .order('created_at', { foreignTable: 'income_entries', ascending: true })
+      .order('created_at', { foreignTable: 'deductions', ascending: true })
+      .order('created_at', { foreignTable: 'earnings_activity', ascending: false })
       .single();
 
     if (error) {
@@ -298,6 +317,62 @@ export class EarningsRepository {
     }
 
     return data;
+  }
+
+  // ============================================================================
+  // INCOME ENTRIES
+  // ============================================================================
+
+  /**
+   * List income entries for an earnings period
+   */
+  async listIncomeEntries(earningsPeriodId: string, organizationId: OrganizationId): Promise<IncomeEntry[]> {
+    const { data, error } = await this.supabase
+      .from('income_entries')
+      .select('*')
+      .eq('earnings_period_id', earningsPeriodId)
+      .eq('organization_id', organizationId)
+      .order('created_at', { ascending: true });
+
+    if (error) throw error;
+    return data || [];
+  }
+
+  /**
+   * Create income entry
+   * Trigger will recalculate gross_earnings and log to activity
+   */
+  async createIncomeEntry(
+    input: CreateIncomeEntryInput,
+    organizationId: OrganizationId,
+    userId: string
+  ): Promise<IncomeEntry> {
+    const { data, error } = await this.supabase
+      .from('income_entries')
+      .insert({
+        organization_id: organizationId,
+        ...input,
+        created_by: userId,
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  }
+
+  /**
+   * Delete income entry
+   * Trigger will recalculate gross_earnings and log to activity
+   */
+  async deleteIncomeEntry(id: string, organizationId: OrganizationId): Promise<void> {
+    const { error } = await this.supabase
+      .from('income_entries')
+      .delete()
+      .eq('id', id)
+      .eq('organization_id', organizationId);
+
+    if (error) throw error;
   }
 
   /**

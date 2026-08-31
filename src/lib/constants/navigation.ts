@@ -92,12 +92,6 @@ export const NAV_ITEMS: NavItem[] = [
     available: true,
   },
   {
-    label: 'Expenses',
-    href: ROUTES.expenses.list,
-    icon: Receipt,
-    available: true,
-  },
-  {
     label: 'Team',
     href: '/team',
     icon: UsersRound,

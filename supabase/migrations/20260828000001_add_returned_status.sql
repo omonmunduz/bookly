@@ -104,7 +104,10 @@ END $$;
 -- 1. Existing 'available' bikes were presumably already inspected manually
 -- 2. Changing their status retroactively could cause operational confusion
 
-RAISE NOTICE 'Data Migration: No changes to existing bike statuses (new workflow applies to future returns only)';
+DO $$
+BEGIN
+  RAISE NOTICE 'Data Migration: No changes to existing bike statuses (new workflow applies to future returns only)';
+END $$;
 
 -- ============================================================================
 -- STEP 5: Create helper view for bikes awaiting inspection

@@ -21,6 +21,7 @@ import type {
   EarningsPeriod,
   CreateEarningsPeriodInput,
   UpdateEarningsPeriodInput,
+  CreateIncomeEntryInput,
   CreateDeductionInput,
   EarningsFilters,
   EarningsPeriodWithDeductions,
@@ -237,6 +238,53 @@ export async function deleteDeductionAction(id: string): Promise<Result<void>> {
 }
 
 // ============================================================================
+// INCOME ENTRIES
+// ============================================================================
+
+/**
+ * Add income to an earnings period.
+ */
+export async function addIncomeAction(
+  input: CreateIncomeEntryInput
+): Promise<Result<{ id: string }>> {
+  try {
+    const { user, service } = await getService();
+    const result = await service.addIncome(input, user.id);
+
+    if (!result.success) {
+      return result;
+    }
+
+    revalidatePath('/earnings');
+    revalidatePath(`/earnings/${input.earnings_period_id}`);
+    revalidatePath('/dashboard');
+
+    return { success: true, data: { id: result.data.id } };
+  } catch (error) {
+    return failure(error, 'Failed to add income');
+  }
+}
+
+/**
+ * Delete an income entry.
+ */
+export async function deleteIncomeAction(id: string): Promise<Result<void>> {
+  try {
+    const { service } = await getService();
+    const result = await service.deleteIncome(id);
+
+    if (result.success) {
+      revalidatePath('/earnings');
+      revalidatePath('/dashboard');
+    }
+
+    return result;
+  } catch (error) {
+    return failure(error, 'Failed to delete income');
+  }
+}
+
+// ============================================================================
 // SUMMARIES
 // ============================================================================
 
@@ -266,5 +314,30 @@ export async function getEarningsCountByStatusAction(): Promise<
     return await service.countByStatus();
   } catch (error) {
     return failure(error, 'Failed to get earnings count by status');
+  }
+}
+
+/**
+ * Mark an earnings period as paid.
+ * Sets status to 'paid' and paid_at to current timestamp.
+ */
+export async function markEarningsPeriodAsPaidAction(
+  id: string
+): Promise<Result<{ id: string }>> {
+  try {
+    const { service } = await getService();
+    const result = await service.markAsPaid(id);
+
+    if (!result.success) {
+      return result;
+    }
+
+    revalidatePath('/earnings');
+    revalidatePath(`/earnings/${id}`);
+    revalidatePath('/dashboard');
+
+    return { success: true, data: { id: result.data.id } };
+  } catch (error) {
+    return failure(error, 'Failed to mark earnings period as paid');
   }
 }
