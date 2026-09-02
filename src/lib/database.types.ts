@@ -346,7 +346,7 @@ export type Database = {
           created_by: string | null
           deleted_at: string | null
           id: string
-          image_url: string
+          image_url: string | null
           model: string
           organization_id: string
           purchase_date: string | null
@@ -363,7 +363,7 @@ export type Database = {
           created_by?: string | null
           deleted_at?: string | null
           id?: string
-          image_url: string
+          image_url?: string | null
           model: string
           organization_id: string
           purchase_date?: string | null
@@ -380,7 +380,7 @@ export type Database = {
           created_by?: string | null
           deleted_at?: string | null
           id?: string
-          image_url?: string
+          image_url?: string | null
           model?: string
           organization_id?: string
           purchase_date?: string | null

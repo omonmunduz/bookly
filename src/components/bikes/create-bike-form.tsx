@@ -52,7 +52,7 @@ export function CreateBikeForm() {
     startTransition(async () => {
       const result = await createBikeAction({
         model,
-        image_url: imageUrl,
+        image_url: imageUrl || null,
         serial_number: serialNumber ? serialNumber : null,
         purchase_date: purchaseDate ? purchaseDate : null,
         purchase_price: purchasePrice,
@@ -98,23 +98,22 @@ export function CreateBikeForm() {
           maxLength={100}
         />
         <p className="text-xs text-muted-foreground">
-          Manufacturer serial number, if the bike has one.
+          Серийный номер производителя, если он есть на велосипеде.
         </p>
       </div>
 
       <div className="space-y-2">
         <Label htmlFor="image_url">
-          Photo URL <span className="text-destructive">*</span>
+          URL изображения
         </Label>
         <Input
           id="image_url"
           name="image_url"
           type="url"
           placeholder="https://example.com/bike.jpg"
-          required
         />
         <p className="text-xs text-muted-foreground">
-          A photo of the bike is required. File upload is coming soon.
+          Фотография велосипеда. Загрузка файлов скоро будет доступна.
         </p>
       </div>
 

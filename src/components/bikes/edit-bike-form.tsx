@@ -54,7 +54,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
     startTransition(async () => {
       const result = await updateBikeAction(bike.id, {
         model,
-        image_url: imageUrl,
+        image_url: imageUrl || null,
         serial_number: serialNumber ? serialNumber : null,
         purchase_date: purchaseDate ? purchaseDate : null,
         purchase_price: purchasePrice,
@@ -103,17 +103,16 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="image_url">
-          Photo URL <span className="text-destructive">*</span>
+          URL изображения
         </Label>
         <Input
           id="image_url"
           name="image_url"
           type="url"
-          defaultValue={bike.image_url}
-          required
+          defaultValue={bike.image_url ?? ''}
         />
         <p className="text-xs text-muted-foreground">
-          A photo of the bike is required. File upload is coming soon.
+          Фотография велосипеда. Загрузка файлов скоро будет доступна.
         </p>
       </div>
 

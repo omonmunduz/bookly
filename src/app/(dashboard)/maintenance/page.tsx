@@ -151,13 +151,13 @@ async function MaintenanceContent({ user }: { user: AuthUser }) {
       {records.length === 0 ? (
         <EmptyState
           icon={<Wrench className="h-10 w-10" />}
-          title="No maintenance records"
-          description="Log your first repair or inspection to start tracking work on the fleet."
+          title="Нет записей обслуживания"
+          description="Зарегистрируйте первый ремонт или инспекцию, чтобы начать отслеживать работу по парку."
           action={
             <Button asChild>
               <Link href="/maintenance/new">
                 <Plus className="h-4 w-4" />
-                New record
+                Новая запись
               </Link>
             </Button>
           }
@@ -191,10 +191,10 @@ async function MaintenanceContent({ user }: { user: AuthUser }) {
                       }
                     >
                       {record.approved_at
-                        ? 'Approved'
+                        ? 'Одобрено'
                         : record.requires_approval
-                          ? 'Pending'
-                          : 'Complete'}
+                          ? 'Ожидает'
+                          : 'Завершено'}
                     </Badge>
                   </div>
                 </CardHeader>
