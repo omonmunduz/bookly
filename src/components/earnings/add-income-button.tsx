@@ -27,8 +27,8 @@ export function AddIncomeButton({ periodId }: AddIncomeButtonProps) {
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       toast({
-        title: 'Invalid amount',
-        description: 'Income amount must be greater than zero',
+        title: 'Неверная сумма',
+        description: 'Сумма дохода должна быть больше нуля',
         variant: 'destructive',
       });
       return;
@@ -43,8 +43,8 @@ export function AddIncomeButton({ periodId }: AddIncomeButtonProps) {
 
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Income added successfully',
+          title: 'Успешно',
+          description: 'Доход добавлен успешно',
         });
         setOpen(false);
         setAmount('');
@@ -52,7 +52,7 @@ export function AddIncomeButton({ periodId }: AddIncomeButtonProps) {
         router.refresh();
       } else {
         toast({
-          title: 'Error',
+          title: 'Ошибка',
           description: result.error,
           variant: 'destructive',
         });
@@ -64,19 +64,19 @@ export function AddIncomeButton({ periodId }: AddIncomeButtonProps) {
     <>
       <Button onClick={() => setOpen(true)} size="sm">
         <Plus className="h-4 w-4" />
-        Add Income
+        Добавить доход
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Add Income"
-        confirmLabel="Add Income"
+        title="Добавить доход"
+        confirmLabel="Добавить доход"
         isPending={isPending}
         onConfirm={handleAddIncome}
       >
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="amount">Amount</Label>
+            <Label htmlFor="amount">Сумма</Label>
             <Input
               id="amount"
               type="number"
@@ -84,18 +84,18 @@ export function AddIncomeButton({ periodId }: AddIncomeButtonProps) {
               min="0.01"
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
-              placeholder="0.00"
+              placeholder="0,00"
               disabled={isPending}
               autoFocus
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes (optional)</Label>
+            <Label htmlFor="notes">Примечания (необязательно)</Label>
             <Textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="e.g. Week 1 earnings, Bonus payment..."
+              placeholder="Например: Доход за неделю 1, Бонусная выплата..."
               rows={3}
               disabled={isPending}
             />

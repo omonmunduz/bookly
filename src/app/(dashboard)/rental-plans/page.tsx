@@ -26,8 +26,8 @@ import { formatMoney } from '@/lib/utils/format';
 import type { RentalPlan } from '@/lib/types/ebike';
 
 export const metadata = {
-  title: 'Rental Plans',
-  description: 'Manage pricing plans for bike rentals',
+  title: 'Тарифные планы',
+  description: 'Управление тарифными планами аренды велосипедов',
 };
 
 export default async function RentalPlansPage() {
@@ -38,16 +38,16 @@ export default async function RentalPlansPage() {
       <header className="flex flex-wrap items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-2xl font-semibold tracking-tight">
-            Rental plans
+            Тарифные планы
           </h1>
           <p className="text-sm text-muted-foreground">
-            Pricing and terms for bike rentals
+            Цены и условия аренды велосипедов
           </p>
         </div>
         <Button asChild>
           <Link href="/rental-plans/new">
             <Plus className="h-4 w-4" />
-            New plan
+            Новый тариф
           </Link>
         </Button>
       </header>
@@ -76,12 +76,12 @@ async function RentalPlansList() {
     return (
       <div className="rounded-lg border border-border bg-card p-8 text-center">
         <p className="text-sm text-muted-foreground">
-          No rental plans yet. A bike cannot be assigned without one.
+          Тарифных планов пока нет. Велосипед нельзя назначить без тарифа.
         </p>
         <Button asChild className="mt-4">
           <Link href="/rental-plans/new">
             <Plus className="h-4 w-4" />
-            Create first plan
+            Создать первый тариф
           </Link>
         </Button>
       </div>
@@ -95,7 +95,7 @@ async function RentalPlansList() {
     <div className="space-y-8">
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">
-          Available for new assignments
+          Доступны для новых назначений
           <span className="ml-2 text-sm font-normal text-muted-foreground">
             {activePlans.length}
           </span>

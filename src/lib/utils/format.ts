@@ -7,18 +7,21 @@
  * - Consistent formatting across the entire app
  */
 
+// Russian locale for all formatting
+const LOCALE = 'ru-RU';
+
 // ── Money ─────────────────────────────────────────────────────────────────────
 
 /**
- * Format a money amount for display.
+ * Format a money amount for display (Russian locale).
  *
  * Examples:
- *   formatMoney(1234.5)         → "1,234.50"
- *   formatMoney(1234.5, 'KGS') → "1,234.50 KGS"
- *   formatMoney(0)             → "0.00"
+ *   formatMoney(1234.5)         → "1 234,50"
+ *   formatMoney(1234.5, 'KGS') → "1 234,50 KGS"
+ *   formatMoney(0)             → "0,00"
  */
 export function formatMoney(amount: number, currency?: string): string {
-  const formatted = new Intl.NumberFormat('en-US', {
+  const formatted = new Intl.NumberFormat(LOCALE, {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(amount);
@@ -30,8 +33,8 @@ export function formatMoney(amount: number, currency?: string): string {
  * Format a money amount with sign for delta displays.
  *
  * Examples:
- *   formatMoneyDelta(500)  → "+500.00"
- *   formatMoneyDelta(-200) → "-200.00"
+ *   formatMoneyDelta(500)  → "+500,00"
+ *   formatMoneyDelta(-200) → "-200,00"
  */
 export function formatMoneyDelta(amount: number, currency?: string): string {
   const sign = amount >= 0 ? '+' : '';
@@ -46,14 +49,14 @@ export const formatCurrency = formatMoney;
 // ── Dates ─────────────────────────────────────────────────────────────────────
 
 /**
- * Format a date for display.
+ * Format a date for display (Russian locale).
  *
  * Examples:
- *   formatDate(new Date('2024-07-23')) → "Jul 23, 2024"
+ *   formatDate(new Date('2024-07-23')) → "23 июл. 2024 г."
  */
 export function formatDate(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(LOCALE, {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
@@ -61,14 +64,14 @@ export function formatDate(date: Date | string): string {
 }
 
 /**
- * Format a date as a short date string for table cells.
+ * Format a date as a short date string for table cells (Russian format: DD.MM.YYYY).
  *
  * Examples:
- *   formatDateShort(new Date('2024-07-23')) → "07/23/2024"
+ *   formatDateShort(new Date('2024-07-23')) → "23.07.2024"
  */
 export function formatDateShort(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat(LOCALE, {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
@@ -76,15 +79,15 @@ export function formatDateShort(date: Date | string): string {
 }
 
 /**
- * Format a relative time string.
+ * Format a relative time string (Russian locale).
  *
  * Examples:
- *   formatRelative(new Date(Date.now() - 60000)) → "1 minute ago"
- *   formatRelative(new Date(Date.now() + 86400000)) → "in 1 day"
+ *   formatRelative(new Date(Date.now() - 60000)) → "1 минуту назад"
+ *   formatRelative(new Date(Date.now() + 86400000)) → "через 1 день"
  */
 export function formatRelative(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date;
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const rtf = new Intl.RelativeTimeFormat(LOCALE, { numeric: 'auto' });
   const seconds = Math.floor((d.getTime() - Date.now()) / 1000);
 
   if (Math.abs(seconds) < 60) return rtf.format(seconds, 'second');
@@ -102,12 +105,12 @@ export function formatRelative(date: Date | string): string {
  * Format a percentage.
  *
  * Examples:
- *   formatPercent(37.5)  → "37.5%"
+ *   formatPercent(37.5)  → "37,5%"
  *   formatPercent(100)   → "100%"
- *   formatPercent(0.125) → "0.1%"
+ *   formatPercent(0.125) → "0,1%"
  */
 export function formatPercent(value: number, decimals: number = 1): string {
-  return `${value.toFixed(decimals)}%`;
+  return `${value.toFixed(decimals).replace('.', ',')}%`;
 }
 
 /**
@@ -115,9 +118,9 @@ export function formatPercent(value: number, decimals: number = 1): string {
  *
  * Examples:
  *   formatQuantity(50)     → "50"
- *   formatQuantity(1.5)    → "1.5"
- *   formatQuantity(1.500)  → "1.5" (trailing zeros removed)
+ *   formatQuantity(1.5)    → "1,5"
+ *   formatQuantity(1.500)  → "1,5" (trailing zeros removed)
  */
 export function formatQuantity(quantity: number): string {
-  return parseFloat(quantity.toFixed(3)).toString();
+  return parseFloat(quantity.toFixed(3)).toString().replace('.', ',');
 }

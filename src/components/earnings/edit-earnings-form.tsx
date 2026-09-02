@@ -55,14 +55,14 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
 
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Earnings period updated successfully',
+          title: 'Успешно',
+          description: 'Период выплат обновлен успешно',
         });
         router.push(`/earnings/${period.id}`);
         router.refresh();
       } else {
         toast({
-          title: 'Error',
+          title: 'Ошибка',
           description: result.error,
           variant: 'destructive',
         });
@@ -87,7 +87,7 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Period Information</CardTitle>
+              <CardTitle>Информация о периоде</CardTitle>
               <CardDescription>
                 {formatDate(period.period_start)} – {formatDate(period.period_end)}
               </CardDescription>
@@ -100,11 +100,11 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <p className="text-sm text-muted-foreground">Courier</p>
+              <p className="text-sm text-muted-foreground">Курьер</p>
               <p className="text-lg font-semibold">{period.courier.full_name}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Courier Code</p>
+              <p className="text-sm text-muted-foreground">Код курьера</p>
               <p className="text-lg font-semibold">{period.courier.courier_code}</p>
             </div>
           </div>
@@ -116,7 +116,7 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Income Entries</CardTitle>
+              <CardTitle>Записи дохода</CardTitle>
               <CardDescription>
                 {period.income_entries.length} entr{period.income_entries.length !== 1 ? 'ies' : 'y'}
               </CardDescription>
@@ -129,18 +129,18 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
         <CardContent>
           {period.income_entries.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No income entries for this period</p>
+              <p>Нет записей дохода для этого периода</p>
               {period.status === 'draft' && (
-                <p className="text-sm mt-2">Click "Add Income" to get started</p>
+                <p className="text-sm mt-2">Нажмите "Добавить доход" для начала</p>
               )}
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Notes</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>Дата</TableHead>
+                  <TableHead>Примечания</TableHead>
+                  <TableHead className="text-right">Сумма</TableHead>
                   {period.status === 'draft' && <TableHead className="w-[50px]"></TableHead>}
                 </TableRow>
               </TableHeader>
@@ -170,17 +170,17 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
       {/* Notes Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Notes</CardTitle>
+          <CardTitle>Примечания</CardTitle>
           <CardDescription>Optional notes about this period</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes (optional)</Label>
+            <Label htmlFor="notes">Примечания (необязательно)</Label>
             <Textarea
               id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              placeholder="Add any additional notes about this earnings period..."
+              placeholder="Добавьте дополнительные примечания об этом периоде выплат..."
               rows={3}
               disabled={period.status === 'paid'}
             />
@@ -193,7 +193,7 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Deductions</CardTitle>
+              <CardTitle>Удержания</CardTitle>
               <CardDescription>
                 {period.deductions.length} deduction{period.deductions.length !== 1 ? 's' : ''}
               </CardDescription>
@@ -206,18 +206,18 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
         <CardContent>
           {period.deductions.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              <p>No deductions for this period</p>
+              <p>Нет удержаний для этого периода</p>
               {period.status === 'draft' && (
-                <p className="text-sm mt-2">Click "Add deduction" to get started</p>
+                <p className="text-sm mt-2">Нажмите "Добавить удержание" для начала</p>
               )}
             </div>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>Тип</TableHead>
+                  <TableHead>Описание</TableHead>
+                  <TableHead className="text-right">Сумма</TableHead>
                   {period.status === 'draft' && <TableHead className="w-[50px]"></TableHead>}
                 </TableRow>
               </TableHeader>
@@ -247,24 +247,24 @@ export function EditEarningsForm({ period }: EditEarningsFormProps) {
       {/* Summary Card */}
       <Card>
         <CardHeader>
-          <CardTitle>Summary</CardTitle>
+          <CardTitle>Итоговая сводка</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
           <div className="flex justify-between items-baseline">
-            <span className="text-muted-foreground">Total Income</span>
+            <span className="text-muted-foreground">Всего доход</span>
             <span className="text-xl font-semibold">
               {formatCurrency(totalIncome)}
             </span>
           </div>
           <div className="flex justify-between items-baseline">
-            <span className="text-muted-foreground">Total Deductions</span>
+            <span className="text-muted-foreground">Всего удержаний</span>
             <span className="text-xl font-semibold text-destructive">
               -{formatCurrency(totalDeductions)}
             </span>
           </div>
           <Separator />
           <div className="flex justify-between items-baseline">
-            <span className="text-lg font-semibold">Net payout</span>
+            <span className="text-lg font-semibold">Сумма к выплате</span>
             <span className="text-2xl font-bold text-primary">
               {formatCurrency(netPayout)}
             </span>

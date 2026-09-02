@@ -25,8 +25,8 @@ import { Badge } from '@/components/ui/badge';
 import type { BikeFilters } from '@/lib/types/ebike';
 
 export const metadata = {
-  title: 'Bikes',
-  description: 'Manage bike fleet',
+  title: 'Велосипеды',
+  description: 'Управление парком велосипедов',
 };
 
 interface PageProps {
@@ -48,13 +48,13 @@ export default async function BikesPage({ searchParams }: PageProps) {
     <div className="container mx-auto max-w-7xl p-4 md:p-8">
       <header className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Bikes</h1>
-          <p className="text-sm text-muted-foreground">Manage your bike fleet</p>
+          <h1 className="text-2xl font-semibold tracking-tight">Велосипеды</h1>
+          <p className="text-sm text-muted-foreground">Управление парком велосипедов</p>
         </div>
         <Button asChild>
           <Link href="/bikes/new">
             <Plus className="mr-2 h-4 w-4" />
-            Add Bike
+            Добавить велосипед
           </Link>
         </Button>
       </header>
@@ -64,7 +64,7 @@ export default async function BikesPage({ searchParams }: PageProps) {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search by bike number or model..."
+            placeholder="Поиск по номеру или модели..."
             className="pl-10"
             defaultValue={params.search}
             name="search"
@@ -83,11 +83,11 @@ export default async function BikesPage({ searchParams }: PageProps) {
 
 function StatusFilter({ currentStatus }: { currentStatus?: string }) {
   const statuses = [
-    { value: '', label: 'All' },
-    { value: 'available', label: 'Available' },
-    { value: 'assigned', label: 'Assigned' },
-    { value: 'maintenance', label: 'Maintenance' },
-    { value: 'damaged', label: 'Damaged' },
+    { value: '', label: 'Все' },
+    { value: 'available', label: 'Доступно' },
+    { value: 'assigned', label: 'Назначено' },
+    { value: 'maintenance', label: 'Обслуживание' },
+    { value: 'damaged', label: 'Повреждено' },
   ];
 
   return (
@@ -127,14 +127,14 @@ async function BikesTable({ filters }: { filters: BikeFilters }) {
       <div className="rounded-lg border border-border bg-card p-8 text-center">
         <p className="text-sm text-muted-foreground">
           {filters.search || filters.status
-            ? 'No bikes found matching your filters.'
-            : 'No bikes yet. Add your first bike to get started.'}
+            ? 'Не найдено велосипедов, соответствующих фильтрам.'
+            : 'Велосипедов пока нет. Добавьте первый велосипед для начала.'}
         </p>
         {!filters.search && !filters.status && (
           <Button asChild className="mt-4">
             <Link href="/bikes/new">
               <Plus className="mr-2 h-4 w-4" />
-              Add Bike
+              Добавить велосипед
             </Link>
           </Button>
         )}
@@ -165,7 +165,7 @@ async function BikesTable({ filters }: { filters: BikeFilters }) {
               <TableCell>{bike.serial_number || '—'}</TableCell>
               <TableCell className="text-right">
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href={`/bikes/${bike.id}`}>View</Link>
+                  <Link href={`/bikes/${bike.id}`}>Просмотр</Link>
                 </Button>
               </TableCell>
             </TableRow>
@@ -198,11 +198,11 @@ function TableSkeleton() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Bike Number</TableHead>
-            <TableHead>Model</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Serial Number</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Номер велосипеда</TableHead>
+            <TableHead>Модель</TableHead>
+            <TableHead>Статус</TableHead>
+            <TableHead>Серийный номер</TableHead>
+            <TableHead className="text-right">Действия</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

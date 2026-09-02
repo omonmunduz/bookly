@@ -1,0 +1,436 @@
+{
+  "common": {
+    "actions": {
+      "add": "Добавить",
+      "edit": "Редактировать",
+      "delete": "Удалить",
+      "save": "Сохранить",
+      "cancel": "Отмена",
+      "confirm": "Подтвердить",
+      "close": "Закрыть",
+      "back": "Назад",
+      "next": "Далее",
+      "submit": "Отправить",
+      "search": "Поиск",
+      "filter": "Фильтр",
+      "export": "Экспорт",
+      "import": "Импорт",
+      "refresh": "Обновить",
+      "view": "Просмотр",
+      "details": "Подробнее",
+      "create": "Создать",
+      "update": "Обновить"
+    },
+    "status": {
+      "loading": "Загрузка...",
+      "saving": "Сохранение...",
+      "success": "Успешно",
+      "error": "Ошибка",
+      "warning": "Предупреждение",
+      "info": "Информация"
+    },
+    "validation": {
+      "required": "Обязательное поле",
+      "invalidEmail": "Неверный формат email",
+      "invalidPhone": "Неверный формат телефона",
+      "minLength": "Минимальная длина: {min} символов",
+      "maxLength": "Максимальная длина: {max} символов",
+      "mustBePositive": "Значение должно быть положительным",
+      "mustBeGreaterThanZero": "Значение должно быть больше нуля",
+      "invalidDate": "Неверная дата",
+      "endDateAfterStart": "Конечная дата должна быть позже начальной"
+    },
+    "empty": {
+      "noData": "Нет данных",
+      "noResults": "Ничего не найдено",
+      "noResultsFor": "Не найдено результатов для \"{query}\"",
+      "createFirst": "Создайте первую запись"
+    },
+    "time": {
+      "today": "Сегодня",
+      "yesterday": "Вчера",
+      "tomorrow": "Завтра",
+      "now": "Сейчас"
+    },
+    "labels": {
+      "optional": "необязательно",
+      "required": "обязательно",
+      "notes": "Примечания",
+      "date": "Дата",
+      "amount": "Сумма",
+      "total": "Итого",
+      "description": "Описание",
+      "status": "Статус",
+      "type": "Тип",
+      "name": "Название",
+      "phone": "Телефон",
+      "email": "Email",
+      "address": "Адрес",
+      "createdAt": "Создано",
+      "updatedAt": "Обновлено",
+      "createdBy": "Создал",
+      "actions": "Действия"
+    }
+  },
+  "nav": {
+    "dashboard": "Панель управления",
+    "bikes": "Велосипеды",
+    "couriers": "Курьеры",
+    "assignments": "Назначения",
+    "rentalPlans": "Тарифы аренды",
+    "earnings": "Выплаты",
+    "maintenance": "Обслуживание",
+    "team": "Команда",
+    "settings": "Настройки"
+  },
+  "auth": {
+    "login": {
+      "title": "Вход",
+      "description": "Введите email и пароль для входа",
+      "email": "Email",
+      "password": "Пароль",
+      "emailPlaceholder": "your@email.com",
+      "passwordPlaceholder": "Введите пароль",
+      "signIn": "Войти",
+      "signingIn": "Вход...",
+      "forgotPassword": "Забыли пароль?",
+      "noAccount": "Нет аккаунта?",
+      "signUp": "Зарегистрироваться",
+      "invalidCredentials": "Неверный email или пароль",
+      "deactivated": "Ваш аккаунт деактивирован. Обратитесь к владельцу организации для восстановления доступа.",
+      "expired": "Сессия истекла. Войдите снова."
+    },
+    "signup": {
+      "title": "Регистрация",
+      "description": "Создайте аккаунт для начала работы",
+      "fullName": "Полное имя",
+      "fullNamePlaceholder": "Иван Иванов",
+      "organizationName": "Название организации",
+      "organizationPlaceholder": "Название вашей компании",
+      "createAccount": "Создать аккаунт",
+      "creating": "Создание...",
+      "hasAccount": "Уже есть аккаунт?",
+      "signIn": "Войти"
+    },
+    "logout": "Выход"
+  },
+  "bikes": {
+    "title": "Велосипеды",
+    "singular": "Велосипед",
+    "addBike": "Добавить велосипед",
+    "editBike": "Редактировать велосипед",
+    "bikeDetails": "Информация о велосипеде",
+    "fields": {
+      "bikeNumber": "Номер велосипеда",
+      "serialNumber": "Серийный номер",
+      "model": "Модель",
+      "status": "Статус",
+      "purchaseDate": "Дата покупки",
+      "purchasePrice": "Цена покупки",
+      "conditionNotes": "Примечания о состоянии",
+      "batteryInfo": "Информация о батарее",
+      "image": "Изображение"
+    },
+    "status": {
+      "available": "Доступен",
+      "assigned": "Назначен",
+      "returned": "Возвращен",
+      "maintenance": "На обслуживании",
+      "damaged": "Поврежден",
+      "retired": "Списан"
+    },
+    "search": "Поиск по номеру, модели или серийному номеру...",
+    "noBikes": "Нет велосипедов",
+    "createFirst": "Добавьте первый велосипед в систему",
+    "count": "{count, plural, one {# велосипед} few {# велосипеда} many {# велосипедов} other {# велосипедов}}"
+  },
+  "couriers": {
+    "title": "Курьеры",
+    "singular": "Курьер",
+    "addCourier": "Добавить курьера",
+    "editCourier": "Редактировать курьера",
+    "courierDetails": "Информация о курьере",
+    "fields": {
+      "courierCode": "Код курьера",
+      "fullName": "Полное имя",
+      "phone": "Телефон",
+      "identificationNumber": "ИНН",
+      "address": "Адрес",
+      "emergencyContact": "Контакт для экстренной связи",
+      "startDate": "Дата начала работы",
+      "status": "Статус",
+      "yandexIdentifier": "ID Яндекс",
+      "notes": "Примечания"
+    },
+    "status": {
+      "active": "Активен",
+      "inactive": "Неактивен",
+      "suspended": "Приостановлен"
+    },
+    "search": "Поиск по коду, имени или телефону...",
+    "noCouriers": "Нет курьеров",
+    "createFirst": "Добавьте первого курьера в систему",
+    "count": "{count, plural, one {# курьер} few {# курьера} many {# курьеров} other {# курьеров}}"
+  },
+  "assignments": {
+    "title": "Назначения",
+    "singular": "Назначение",
+    "newAssignment": "Новое назначение",
+    "assignmentDetails": "Информация о назначении",
+    "assignBike": "Назначить велосипед",
+    "returnBike": "Возврат велосипеда",
+    "fields": {
+      "bike": "Велосипед",
+      "courier": "Курьер",
+      "rentalPlan": "Тарифный план",
+      "assignedAt": "Дата назначения",
+      "returnedAt": "Дата возврата",
+      "conditionAtAssignment": "Состояние при выдаче",
+      "conditionAtReturn": "Состояние при возврате",
+      "assignmentNotes": "Примечания при выдаче",
+      "returnNotes": "Примечания при возврате",
+      "duration": "Длительность",
+      "cost": "Стоимость"
+    },
+    "status": {
+      "active": "Активно",
+      "returned": "Возвращено"
+    },
+    "noAssignments": "Нет назначений",
+    "createFirst": "Создайте первое назначение велосипеда курьеру",
+    "count": "{count, plural, one {# назначение} few {# назначения} many {# назначений} other {# назначений}}",
+    "selectBike": "Выберите велосипед",
+    "selectCourier": "Выберите курьера",
+    "selectPlan": "Выберите тарифный план"
+  },
+  "rentalPlans": {
+    "title": "Тарифы аренды",
+    "singular": "Тарифный план",
+    "addPlan": "Добавить тариф",
+    "editPlan": "Редактировать тариф",
+    "planDetails": "Информация о тарифе",
+    "fields": {
+      "name": "Название",
+      "duration": "Длительность",
+      "price": "Цена",
+      "description": "Описание",
+      "isActive": "Активен"
+    },
+    "duration": {
+      "days": "{count, plural, one {# день} few {# дня} many {# дней} other {# дней}}",
+      "weeks": "{count, plural, one {# неделя} few {# недели} many {# недель} other {# недель}}",
+      "months": "{count, plural, one {# месяц} few {# месяца} many {# месяцев} other {# месяцев}}"
+    },
+    "noPlans": "Нет тарифных планов",
+    "createFirst": "Создайте первый тарифный план"
+  },
+  "earnings": {
+    "title": "Выплаты",
+    "singular": "Период выплат",
+    "newPeriod": "Новый период",
+    "editPeriod": "Редактировать период",
+    "periodDetails": "Информация о периоде",
+    "fields": {
+      "courier": "Курьер",
+      "courierCode": "Код курьера",
+      "period": "Период",
+      "periodStart": "Начало периода",
+      "periodEnd": "Конец периода",
+      "grossEarnings": "Общий доход",
+      "totalDeductions": "Всего удержаний",
+      "netPayout": "Сумма к выплате",
+      "status": "Статус",
+      "paid": "Выплачено",
+      "paidAt": "Дата выплаты",
+      "notes": "Примечания"
+    },
+    "status": {
+      "draft": "Черновик",
+      "approved": "Утвержден",
+      "paid": "Оплачен"
+    },
+    "income": {
+      "title": "Записи дохода",
+      "addIncome": "Добавить доход",
+      "amount": "Сумма",
+      "notes": "Примечания",
+      "notesPlaceholder": "Например: Доход за неделю 1, Бонусная выплата...",
+      "noEntries": "Нет записей дохода для этого периода",
+      "createFirst": "Нажмите \"Добавить доход\" для начала",
+      "count": "{count, plural, one {# запись} few {# записи} many {# записей} other {# записей}}",
+      "deleteConfirm": "Вы уверены, что хотите удалить эту запись дохода?",
+      "deleted": "Запись дохода удалена",
+      "added": "Доход добавлен успешно",
+      "totalIncome": "Всего доход"
+    },
+    "deductions": {
+      "title": "Удержания",
+      "addDeduction": "Добави��ь удержание",
+      "type": "Тип",
+      "amount": "Сумма",
+      "description": "Описание",
+      "noDeductions": "Нет удержаний для этого периода",
+      "createFirst": "Нажмите \"Добавить удержание\" для начала",
+      "count": "{count, plural, one {# удержание} few {# удержания} many {# удержаний} other {# удержаний}}",
+      "types": {
+        "rental": "Аренда велосипеда",
+        "damage": "Возмещение ущерба",
+        "equipment": "Стоимость оборудования",
+        "other": "Прочее"
+      }
+    },
+    "markAsPaid": {
+      "button": "Отметить как оплачено",
+      "title": "Отметить как оплачено?",
+      "description": "Подтвердите, что курьеру {courierName} была выплачена сумма {amount} за этот период. Это действие нельзя отменить. Период будет заблокирован, и дальнейшие изменения будут невозможны.",
+      "confirm": "Подтвердить оплату",
+      "success": "Период выплат отмечен как оплаченный",
+      "alreadyPaid": "Уже оплачено",
+      "mustBeApproved": "Период должен быть утвержден перед тем, как отметить его как оплаченный"
+    },
+    "activity": {
+      "title": "История действий",
+      "description": "Полный журнал всех действий с этим периодом выплат",
+      "noActivity": "Действия пока не записаны",
+      "types": {
+        "period_created": "Период создан",
+        "period_updated": "Период обновлен",
+        "period_deleted": "Период удален",
+        "status_changed": "Статус изменен",
+        "marked_as_paid": "Отмечен как оплачено",
+        "income_added": "Доход добавлен",
+        "income_deleted": "Доход удален",
+        "deduction_added": "Удержание добавлено",
+        "deduction_deleted": "Удержание удалено"
+      },
+      "details": {
+        "incomeAdded": "Добавлено {amount}",
+        "incomeDeleted": "Удалено {amount}",
+        "deductionAdded": "Добавлено удержание {type}: {amount} — {description}",
+        "deductionDeleted": "Удалено удержание {type}: {amount} — {description}",
+        "statusChanged": "Изменено с {from} на {to}",
+        "markedAsPaid": "Оплачено {amount}",
+        "periodCreated": "Создан период выплат",
+        "periodUpdated": "Обновлено поле: {field}",
+        "by": "пользователем"
+      }
+    },
+    "summary": "Итоговая сводка",
+    "noPeriods": "Нет периодов выплат",
+    "createFirst": "Создайте первый период выплат для курьера",
+    "search": "Поиск по имени курьера, дате или статусу...",
+    "found": "Найдено {count} из {total} периодов",
+    "cannotEdit": "Этот период отмечен как оплаченный и не может быть изменен.",
+    "cannotAddIncome": "Невозможно добавить доход в оплаченный период",
+    "cannotAddDeduction": "Невозможно добавить удержание в оплаченный период",
+    "overlapError": "Период выплат уже существует для этого курьера в указанном диапазоне дат",
+    "addCourierFirst": "Добавьте курьера перед созданием периода выплат."
+  },
+  "maintenance": {
+    "title": "Обслуживание",
+    "singular": "Запись обслуживания",
+    "newRecord": "Новая запись",
+    "recordDetails": "Информация об обслуживании",
+    "inspections": "Инспекции",
+    "approvals": "Требуют утверждения",
+    "fields": {
+      "bike": "Велосипед",
+      "type": "Тип",
+      "description": "Описание",
+      "cost": "Стоимость",
+      "performedBy": "Выполнил",
+      "performedAt": "Дата выполнения",
+      "partsReplaced": "Замененные детали",
+      "notes": "Примечания",
+      "images": "Фотографии",
+      "requiresApproval": "Требует утверждения"
+    },
+    "types": {
+      "repair": "Ремонт",
+      "inspection": "Инспекция",
+      "replacement": "Замена детали",
+      "cleaning": "Очистка",
+      "other": "Прочее"
+    },
+    "condition": {
+      "excellent": "Отличное",
+      "good": "Хорошее",
+      "fair": "Удовлетворительное",
+      "poor": "Плохое",
+      "damaged": "Повреждено"
+    },
+    "noRecords": "Нет записей обслуживания",
+    "createFirst": "Создайте первую запись обслуживания"
+  },
+  "team": {
+    "title": "Команда",
+    "singular": "Участник команды",
+    "addMember": "Добавить участника",
+    "memberDetails": "Информация об участнике",
+    "fields": {
+      "fullName": "Полное имя",
+      "email": "Email",
+      "role": "Роль",
+      "status": "Статус",
+      "invitedAt": "Приглашен",
+      "joinedAt": "Присоединился"
+    },
+    "roles": {
+      "admin": "Администратор",
+      "manager": "Менеджер",
+      "mechanic": "Механик"
+    },
+    "roleDescriptions": {
+      "admin": "Полный доступ к системе",
+      "manager": "Управление операциями и выплатами",
+      "mechanic": "Обслуживание и инспекции"
+    },
+    "permissions": {
+      "admin": [
+        "Управление пользователями и членами команды",
+        "Полный доступ ко всем функциям",
+        "Настройка параметров системы",
+        "Просмотр и управление выплатами",
+        "Управление всеми операциями"
+      ],
+      "manager": [
+        "Управление велосипедами, курьерами и назначениями",
+        "Просмотр и управление выплатами",
+        "Утверждение запросов на обслуживание",
+        "Отслеживание расходов",
+        "Создание отчетов"
+      ],
+      "mechanic": [
+        "Просмотр назначенных задач обслуживания",
+        "Обновление статуса обслуживания",
+        "Запись инспекций",
+        "Просмотр информации о велосипедах"
+      ]
+    },
+    "noMembers": "Нет участников команды",
+    "inviteMember": "Пригласить участника"
+  },
+  "dashboard": {
+    "title": "Панель управления",
+    "welcome": "Добро пожаловать",
+    "overview": "Обзор",
+    "quickStats": "Быстрая статистика",
+    "recentActivity": "Недавняя активность"
+  },
+  "errors": {
+    "generic": "Произошла ошибка",
+    "notFound": "Не найдено",
+    "unauthorized": "Нет доступа",
+    "forbidden": "Доступ запрещен",
+    "serverError": "Ошибка сервера",
+    "networkError": "Ошибка сети",
+    "tryAgain": "Попробуйте снова",
+    "goHome": "На главную"
+  },
+  "success": {
+    "created": "Успешно создано",
+    "updated": "Успешно обновлено",
+    "deleted": "Успешно удалено",
+    "saved": "Успешно сохранено"
+  }
+}

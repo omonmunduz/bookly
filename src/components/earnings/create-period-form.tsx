@@ -45,7 +45,7 @@ export function CreateEarningsPeriodForm({
     const notes = (formData.get('notes') as string)?.trim();
 
     if (new Date(periodEnd) < new Date(periodStart)) {
-      setError('The end date must fall on or after the start date.');
+      setError('Конечная дата должна быть позже начальной.');
       return;
     }
 
@@ -71,7 +71,7 @@ export function CreateEarningsPeriodForm({
         <AlertDescription className="flex flex-col items-start gap-3">
           <span>Add a courier before creating an earnings period.</span>
           <Button asChild size="sm">
-            <Link href="/couriers/new">Add a courier</Link>
+            <Link href="/couriers/new">Добавить курьера</Link>
           </Button>
         </AlertDescription>
       </Alert>
@@ -144,7 +144,7 @@ export function CreateEarningsPeriodForm({
           Create period
         </Button>
         <Button type="button" variant="outline" asChild disabled={isPending}>
-          <Link href="/earnings">Cancel</Link>
+          <Link href="/earnings">Отмена</Link>
         </Button>
       </div>
     </form>

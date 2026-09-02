@@ -46,7 +46,7 @@ export function DeleteDeductionButton({
         variant="ghost"
         size="icon"
         onClick={() => setOpen(true)}
-        aria-label="Delete deduction"
+        aria-label="Удалить удержание"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
@@ -57,9 +57,9 @@ export function DeleteDeductionButton({
           setOpen(next);
           if (!next) setError(null);
         }}
-        title="Delete deduction"
-        description="This removes the deduction from the period and cannot be undone."
-        confirmLabel="Delete"
+        title="Удалить удержание"
+        description="Это удалит удержание из периода. Действие нельзя отменить."
+        confirmLabel="Удалить"
         destructive
         isPending={isPending}
         error={error}

@@ -22,11 +22,11 @@ function getTimeAgo(date: Date): string {
   const diffHours = Math.floor(diffMs / 3600000);
   const diffDays = Math.floor(diffMs / 86400000);
 
-  if (diffMinutes < 1) return 'just now';
-  if (diffMinutes < 60) return `${diffMinutes}m ago`;
-  if (diffHours < 24) return `${diffHours}h ago`;
-  if (diffDays === 1) return 'yesterday';
-  return `${diffDays}d ago`;
+  if (diffMinutes < 1) return 'только что';
+  if (diffMinutes < 60) return `${diffMinutes} мин. назад`;
+  if (diffHours < 24) return `${diffHours} ч. назад`;
+  if (diffDays === 1) return 'вчера';
+  return `${diffDays} дн. назад`;
 }
 
 export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspectionWidgetProps) {
@@ -39,10 +39,10 @@ export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspection
         <div className="flex items-center gap-2">
           <ClipboardCheck className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
           <h2 id="inspection-queue-heading" className="text-sm font-semibold">
-            Bikes Awaiting Inspection
+            Велосипеды ожидают инспекцию
           </h2>
         </div>
-        <p className="mt-3 text-sm text-muted-foreground">No bikes waiting for inspection</p>
+        <p className="mt-3 text-sm text-muted-foreground">Нет велосипедов, ожидающих инспекцию</p>
       </section>
     );
   }
@@ -56,7 +56,7 @@ export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspection
         <div className="flex items-center gap-2">
           <ClipboardCheck className="h-4 w-4 text-warning" aria-hidden="true" />
           <h2 id="inspection-queue-heading" className="text-sm font-semibold">
-            Bikes Awaiting Inspection
+            Велосипеды ожидают инспекцию
           </h2>
         </div>
         <span className="rounded-full bg-warning/10 px-2 py-0.5 text-xs font-medium text-warning">
@@ -65,7 +65,7 @@ export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspection
       </div>
 
       <p className="mt-1 text-xs text-muted-foreground">
-        Bikes recently returned that need inspection
+        Недавно возвращенные велосипеды, требующие инспекции
       </p>
 
       <ul className="mt-4 space-y-3">
@@ -88,13 +88,13 @@ export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspection
               <div className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
                 <Clock className="h-3 w-3" aria-hidden="true" />
                 <span>
-                  Returned {getTimeAgo(new Date(bike.updated_at))}
+                  Возвращен {getTimeAgo(new Date(bike.updated_at))}
                 </span>
               </div>
             </div>
             <Button size="sm" variant="outline" asChild>
               <Link href={`/maintenance/inspections/new?bikeId=${bike.id}`}>
-                Inspect
+                Инспектировать
               </Link>
             </Button>
           </li>
@@ -105,7 +105,7 @@ export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspection
         <div className="mt-4 text-center">
           <Button size="sm" variant="ghost" asChild className="text-xs">
             <Link href="/bikes?status=returned">
-              View all {bikes.length} bikes
+              Посмотреть все {bikes.length} велосипедов
             </Link>
           </Button>
         </div>
@@ -115,7 +115,7 @@ export function BikesAwaitingInspectionWidget({ bikes }: BikesAwaitingInspection
         <div className="mt-4">
           <Button size="sm" variant="outline" asChild className="w-full">
             <Link href="/bikes?status=returned">
-              View All Returned Bikes
+              Посмотреть все возвращенные велосипеды
             </Link>
           </Button>
         </div>

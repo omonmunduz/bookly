@@ -55,7 +55,7 @@ export function LoginForm() {
         <Input
           id="email"
           type="email"
-          placeholder="you@example.com"
+          placeholder="your@email.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={isPending}
@@ -66,17 +66,18 @@ export function LoginForm() {
 
       <div className="space-y-2">
         <div className="flex items-center justify-between">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">Пароль</Label>
           <Link
             href={ROUTES.auth.resetPassword}
             className="text-sm text-muted-foreground hover:text-foreground"
           >
-            Forgot password?
+            Забыли пароль?
           </Link>
         </div>
         <Input
           id="password"
           type="password"
+          placeholder="Введите пароль"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           disabled={isPending}
@@ -86,13 +87,13 @@ export function LoginForm() {
       </div>
 
       <Button type="submit" className="w-full" disabled={isPending}>
-        {isPending ? 'Signing in...' : 'Sign in'}
+        {isPending ? 'Вход...' : 'Войти'}
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        Don&apos;t have an account?{' '}
+        Нет аккаунта?{' '}
         <Link href={ROUTES.auth.signup} className="font-medium text-primary hover:underline">
-          Sign up
+          Зарегистрироваться
         </Link>
       </p>
     </form>

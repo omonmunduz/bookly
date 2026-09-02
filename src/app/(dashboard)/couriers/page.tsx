@@ -25,8 +25,8 @@ import { Badge } from '@/components/ui/badge';
 import type { CourierFilters } from '@/lib/types/ebike';
 
 export const metadata = {
-  title: 'Couriers',
-  description: 'Manage couriers',
+  title: 'Курьеры',
+  description: 'Управление курьерами',
 };
 
 interface PageProps {
@@ -48,15 +48,15 @@ export default async function CouriersPage({ searchParams }: PageProps) {
     <div className="container mx-auto max-w-7xl p-4 md:p-8">
       <header className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Couriers</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Курьеры</h1>
           <p className="text-sm text-muted-foreground">
-            Manage courier profiles and assignments
+            Управление профилями курьеров и назначениями
           </p>
         </div>
         <Button asChild>
           <Link href="/couriers/new">
             <Plus className="mr-2 h-4 w-4" />
-            New Courier
+            Новый курьер
           </Link>
         </Button>
       </header>
@@ -66,7 +66,7 @@ export default async function CouriersPage({ searchParams }: PageProps) {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="search"
-            placeholder="Search by name, code, or phone..."
+            placeholder="Поиск по имени, коду или телефону..."
             className="pl-10"
             defaultValue={params.search}
             name="search"
@@ -85,10 +85,10 @@ export default async function CouriersPage({ searchParams }: PageProps) {
 
 function StatusFilter({ currentStatus }: { currentStatus?: string }) {
   const statuses = [
-    { value: '', label: 'All' },
-    { value: 'active', label: 'Active' },
-    { value: 'inactive', label: 'Inactive' },
-    { value: 'suspended', label: 'Suspended' },
+    { value: '', label: 'Все' },
+    { value: 'active', label: 'Активные' },
+    { value: 'inactive', label: 'Неактивные' },
+    { value: 'suspended', label: 'Приостановлены' },
   ];
 
   return (
@@ -128,14 +128,14 @@ async function CouriersTable({ filters }: { filters: CourierFilters }) {
       <div className="rounded-lg border border-border bg-card p-8 text-center">
         <p className="text-sm text-muted-foreground">
           {filters.search || filters.status
-            ? 'No couriers found matching your filters.'
-            : 'No couriers yet. Add your first courier to get started.'}
+            ? 'Не найдено курьеров, соответствующих фильтрам.'
+            : 'Курьеров пока нет. Добавьте первого курьера для начала.'}
         </p>
         {!filters.search && !filters.status && (
           <Button asChild className="mt-4">
             <Link href="/couriers/new">
               <Plus className="mr-2 h-4 w-4" />
-              New Courier
+              Новый курьер
             </Link>
           </Button>
         )}
@@ -148,11 +148,11 @@ async function CouriersTable({ filters }: { filters: CourierFilters }) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Courier Code</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Код курьера</TableHead>
+            <TableHead>Имя</TableHead>
+            <TableHead>Телефон</TableHead>
+            <TableHead>Статус</TableHead>
+            <TableHead className="text-right">Действия</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -174,7 +174,7 @@ async function CouriersTable({ filters }: { filters: CourierFilters }) {
               </TableCell>
               <TableCell className="text-right">
                 <Button variant="ghost" size="sm" asChild>
-                  <Link href={`/couriers/${courier.id}`}>View</Link>
+                  <Link href={`/couriers/${courier.id}`}>Просмотр</Link>
                 </Button>
               </TableCell>
             </TableRow>
@@ -205,11 +205,11 @@ function TableSkeleton() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Courier Code</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Код курьера</TableHead>
+            <TableHead>Имя</TableHead>
+            <TableHead>Телефон</TableHead>
+            <TableHead>Статус</TableHead>
+            <TableHead className="text-right">Действия</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

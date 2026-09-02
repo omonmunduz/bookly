@@ -10,8 +10,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { LoginForm } from '@/features/auth/components/LoginForm';
 
 export const metadata = {
-  title: 'Sign in',
-  description: 'Sign in to your account',
+  title: 'Вход',
+  description: 'Войдите в свой аккаунт',
 };
 
 /**
@@ -20,8 +20,8 @@ export const metadata = {
  */
 const SIGN_OUT_REASONS: Record<string, string> = {
   deactivated:
-    'Your account has been deactivated. Contact your organization owner to regain access.',
-  expired: 'Your session expired. Please sign in again.',
+    'Ваш аккаунт деактивирован. Обратитесь к владельцу организации для восстановления доступа.',
+  expired: 'Сессия истекла. Войдите снова.',
 };
 
 export default async function LoginPage({
@@ -35,9 +35,9 @@ export default async function LoginPage({
   return (
     <Card>
       <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Sign in</CardTitle>
+        <CardTitle className="text-2xl font-bold">Вход</CardTitle>
         <CardDescription>
-          Enter your email and password to access your account
+          Введите email и пароль для входа в систему
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

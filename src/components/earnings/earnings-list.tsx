@@ -49,7 +49,7 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="text"
-          placeholder="Search by courier name, date, or status..."
+          placeholder="Поиск по имени курьера, дате или статусу..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className="pl-9"
@@ -59,7 +59,7 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
       {/* Results count */}
       {searchQuery && (
         <p className="text-sm text-muted-foreground">
-          Found {filteredPeriods.length} of {periods.length} periods
+          Найдено {filteredPeriods.length} из {periods.length} периодов
         </p>
       )}
 
@@ -68,7 +68,7 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
         <Card>
           <CardContent className="py-8 text-center">
             <p className="text-muted-foreground">
-              {searchQuery ? 'No periods match your search' : 'No earnings periods found'}
+              {searchQuery ? 'Не найдено периодов, соответствующих поиску' : 'Нет периодов выплат'}
             </p>
           </CardContent>
         </Card>
@@ -80,7 +80,7 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 space-y-1">
                     <CardTitle className="text-lg">
-                      {courierNames.get(period.courier_id) ?? 'Courier'}
+                      {courierNames.get(period.courier_id) ?? 'Курьер'}
                     </CardTitle>
                     <CardDescription>
                       {formatDate(period.period_start)} – {formatDate(period.period_end)}
@@ -93,7 +93,7 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
                     <MarkAsPaidButton
                       periodId={period.id}
                       netPayout={period.net_payout}
-                      courierName={courierNames.get(period.courier_id) ?? 'Courier'}
+                      courierName={courierNames.get(period.courier_id) ?? 'Курьер'}
                       status={period.status}
                       variant="icon"
                     />
@@ -109,25 +109,25 @@ export function EarningsList({ periods, courierNames }: EarningsListProps) {
                 <CardContent>
                   <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                     <div>
-                      <p className="text-sm text-muted-foreground">Gross earnings</p>
+                      <p className="text-sm text-muted-foreground">Общий доход</p>
                       <p className="text-lg font-semibold">
                         {formatCurrency(period.gross_earnings)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Deductions</p>
+                      <p className="text-sm text-muted-foreground">Удержания</p>
                       <p className="text-lg font-semibold text-destructive">
                         -{formatCurrency(period.total_deductions)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Net payout</p>
+                      <p className="text-sm text-muted-foreground">Сумма к выплате</p>
                       <p className="text-lg font-semibold">
                         {formatCurrency(period.net_payout)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-sm text-muted-foreground">Paid</p>
+                      <p className="text-sm text-muted-foreground">Оплачено</p>
                       <p className="text-lg font-semibold">
                         {period.paid_at ? formatDate(period.paid_at) : '—'}
                       </p>

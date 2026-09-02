@@ -11,16 +11,16 @@
 import type { DeductionType, EarningsStatus } from '@/lib/types/ebike';
 
 export const DEDUCTION_TYPE_LABELS: Record<DeductionType, string> = {
-  rental: 'Bike rental fee',
-  damage: 'Damage charge',
-  equipment: 'Equipment cost',
-  other: 'Other',
+  rental: 'Аренда велосипеда',
+  damage: 'Возмещение ущерба',
+  equipment: 'Стоимость оборудования',
+  other: 'Прочее',
 };
 
 export const EARNINGS_STATUS_LABELS: Record<EarningsStatus, string> = {
-  draft: 'Draft',
-  approved: 'Approved',
-  paid: 'Paid',
+  draft: 'Черновик',
+  approved: 'Утвержден',
+  paid: 'Оплачен',
 };
 
 /** Badge variant per status. Paid is the settled, finished state. */

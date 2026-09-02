@@ -35,8 +35,8 @@ import { MAINTENANCE_TYPE_LABELS } from '@/features/maintenance/labels';
 import type { AuthUser } from '@/features/auth/types';
 
 export const metadata = {
-  title: 'Maintenance',
-  description: 'Track bike maintenance and repairs',
+  title: 'Обслуживание',
+  description: 'Отслеживание обслуживания и ремонта велосипедов',
 };
 
 export default async function MaintenancePage() {
@@ -46,22 +46,22 @@ export default async function MaintenancePage() {
     <div className="container mx-auto max-w-7xl space-y-6 p-4 md:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Maintenance</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Обслуживание</h1>
           <p className="text-muted-foreground">
-            Track bike maintenance and repairs
+            Отслеживание обслуживания и ремонта велосипедов
           </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" asChild>
             <Link href="/maintenance/inspections">
               <ClipboardCheck className="h-4 w-4" />
-              Inspections
+              Инспекции
             </Link>
           </Button>
           <Button asChild>
             <Link href="/maintenance/new">
               <Plus className="h-4 w-4" />
-              New record
+              Новая запись
             </Link>
           </Button>
         </div>
@@ -88,7 +88,7 @@ async function MaintenanceContent({ user }: { user: AuthUser }) {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Could not load maintenance records</AlertTitle>
+        <AlertTitle>Не удалось загрузить записи обслуживания</AlertTitle>
         <AlertDescription>{recordsResult.error}</AlertDescription>
       </Alert>
     );
@@ -106,13 +106,13 @@ async function MaintenanceContent({ user }: { user: AuthUser }) {
       {canApprove && pendingCount > 0 && (
         <Alert>
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Pending approvals</AlertTitle>
+          <AlertTitle>Ожидают одобрения</AlertTitle>
           <AlertDescription>
             {pendingCount === 1
-              ? '1 record needs approval.'
-              : `${pendingCount} records need approval.`}{' '}
+              ? '1 запись требует одобрения.'
+              : `${pendingCount} записей требуют одобрения.`}{' '}
             <Link href="/maintenance/approvals" className="font-medium underline">
-              Review now
+              Просмотреть сейчас
             </Link>
           </AlertDescription>
         </Alert>
@@ -121,13 +121,13 @@ async function MaintenanceContent({ user }: { user: AuthUser }) {
       <div className="grid gap-4 sm:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total records</CardTitle>
+            <CardTitle className="text-sm font-medium">Всего записей</CardTitle>
             <Wrench className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{records.length}</div>
             <p className="text-xs text-muted-foreground">
-              All maintenance logged
+              Все зарегистрированное обслуживание
             </p>
           </CardContent>
         </Card>
@@ -135,14 +135,14 @@ async function MaintenanceContent({ user }: { user: AuthUser }) {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
-              Awaiting approval
+              Ожидают одобрения
             </CardTitle>
             <AlertCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{awaitingApproval}</div>
             <p className="text-xs text-muted-foreground">
-              Repairs needing manager sign-off
+              Ремонтов требуют одобрения менеджера
             </p>
           </CardContent>
         </Card>

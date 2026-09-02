@@ -7,15 +7,15 @@
 import type { UserRole } from './types';
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  admin: 'Admin',
-  manager: 'Manager',
-  mechanic: 'Mechanic',
+  admin: 'Администратор',
+  manager: 'Менеджер',
+  mechanic: 'Механик',
 };
 
 export const ROLE_DESCRIPTIONS: Record<UserRole, string> = {
-  admin: 'Full system access',
-  manager: 'Manage operations & earnings',
-  mechanic: 'Handle maintenance tasks',
+  admin: 'Полный доступ к системе',
+  manager: 'Управление операциями и выплатами',
+  mechanic: 'Обслуживание и инспекции',
 };
 
 export const ROLE_VARIANTS = {
@@ -26,23 +26,23 @@ export const ROLE_VARIANTS = {
 
 export const ROLE_PERMISSIONS: Record<UserRole, string[]> = {
   admin: [
-    'Manage users and team members',
-    'Full access to all features',
-    'Configure system settings',
-    'View and manage earnings',
-    'Manage all operations',
+    'Управление пользователями и членами команды',
+    'Полный доступ ко всем функциям',
+    'Настройка параметров системы',
+    'Просмотр и управление выплатами',
+    'Управление всеми операциями',
   ],
   manager: [
-    'Manage bikes, couriers, and assignments',
-    'View and manage earnings',
-    'Approve maintenance requests',
-    'Track expenses',
-    'Generate reports',
+    'Управление велосипедами, курьерами и назначениями',
+    'Просмотр и управление выплатами',
+    'Утверждение запросов на обслуживание',
+    'Отслеживание расходов',
+    'Создание отчетов',
   ],
   mechanic: [
-    'View assigned maintenance tasks',
-    'Update maintenance status',
-    'Record inspections',
-    'View bike details',
+    'Просмотр назначенных задач обслуживания',
+    'Обновление статуса обслуживания',
+    'Запись инспекций',
+    'Просмотр информации о велосипедах',
   ],
 };

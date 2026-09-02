@@ -57,12 +57,12 @@ export function AddDeductionButton({ periodId }: AddDeductionButtonProps) {
 
     const parsedAmount = Number(amount);
     if (!amount.trim() || Number.isNaN(parsedAmount) || parsedAmount <= 0) {
-      setError('Enter an amount greater than zero.');
+      setError('Введите сумму больше нуля.');
       return;
     }
 
     if (!description.trim()) {
-      setError('Enter a description for this deduction.');
+      setError('Введите описание для этого удержания.');
       return;
     }
 
@@ -88,7 +88,7 @@ export function AddDeductionButton({ periodId }: AddDeductionButtonProps) {
     <>
       <Button size="sm" onClick={() => setOpen(true)}>
         <Plus className="h-4 w-4" />
-        Add deduction
+        Добавить удержание
       </Button>
 
       <ConfirmDialog
@@ -97,16 +97,16 @@ export function AddDeductionButton({ periodId }: AddDeductionButtonProps) {
           setOpen(next);
           if (!next) reset();
         }}
-        title="Add deduction"
-        description="Deductions reduce the net payout for this period."
-        confirmLabel="Add deduction"
+        title="Добавить удержание"
+        description="Удержания уменьшают сумму к выплате за этот период."
+        confirmLabel="Добавить удержание"
         isPending={isPending}
         error={error}
         onConfirm={handleConfirm}
       >
         <div className="space-y-4 text-left">
           <div className="space-y-2">
-            <Label htmlFor="deduction_type">Type</Label>
+            <Label htmlFor="deduction_type">Тип</Label>
             <select
               id="deduction_type"
               value={deductionType}
@@ -124,24 +124,24 @@ export function AddDeductionButton({ periodId }: AddDeductionButtonProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deduction_amount">Amount</Label>
+            <Label htmlFor="deduction_amount">Сумма</Label>
             <Input
               id="deduction_amount"
               type="number"
               step="0.01"
               min="0"
               inputMode="decimal"
-              placeholder="0.00"
+              placeholder="0,00"
               value={amount}
               onChange={(event) => setAmount(event.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="deduction_description">Description</Label>
+            <Label htmlFor="deduction_description">Описание</Label>
             <Textarea
               id="deduction_description"
-              placeholder="What is this deduction for?"
+              placeholder="За что это удержание?"
               rows={3}
               maxLength={500}
               value={description}

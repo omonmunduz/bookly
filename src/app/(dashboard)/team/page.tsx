@@ -10,8 +10,8 @@ import { EmptyState } from '@/components/shared/EmptyState';
 import { UserList } from '@/components/team/user-list';
 
 export const metadata = {
-  title: 'Team',
-  description: 'Manage team members and roles',
+  title: 'Команда',
+  description: 'Управление участниками команды и ролями',
 };
 
 export default async function TeamPage() {
@@ -21,15 +21,15 @@ export default async function TeamPage() {
     <div className="container mx-auto max-w-7xl space-y-6 p-4 md:p-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Team</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Команда</h1>
           <p className="text-muted-foreground">
-            Manage team members and their roles
+            Управление участниками команды и их ролями
           </p>
         </div>
         <Button asChild>
           <Link href="/team/new">
             <Plus className="h-4 w-4" />
-            Add team member
+            Добавить участника
           </Link>
         </Button>
       </div>
@@ -69,31 +69,31 @@ async function TeamContent() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Members</CardTitle>
+            <CardTitle className="text-sm font-medium">Всего участников</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{users.length}</div>
             <p className="text-xs text-muted-foreground">
-              {activeUsers} active, {inactiveUsers} inactive
+              {activeUsers} активных, {inactiveUsers} неактивных
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Admins</CardTitle>
+            <CardTitle className="text-sm font-medium">Администраторы</CardTitle>
             <ShieldCheck className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{usersByRole.admin || 0}</div>
-            <p className="text-xs text-muted-foreground">Full system access</p>
+            <p className="text-xs text-muted-foreground">Полный доступ к системе</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Managers</CardTitle>
+            <CardTitle className="text-sm font-medium">Менеджеры</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>

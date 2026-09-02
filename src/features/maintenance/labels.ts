@@ -14,19 +14,19 @@ import type {
 } from '@/lib/types/ebike';
 
 export const MAINTENANCE_TYPE_LABELS: Record<MaintenanceType, string> = {
-  repair: 'Repair',
-  inspection: 'Inspection',
-  replacement: 'Part replacement',
-  cleaning: 'Cleaning',
-  other: 'Other',
+  repair: 'Ремонт',
+  inspection: 'Инспекция',
+  replacement: 'Замена детали',
+  cleaning: 'Очистка',
+  other: 'Прочее',
 };
 
 export const INSPECTION_CONDITION_LABELS: Record<InspectionCondition, string> = {
-  excellent: 'Excellent',
-  good: 'Good',
-  fair: 'Fair',
-  poor: 'Poor',
-  damaged: 'Damaged',
+  excellent: 'Отличное',
+  good: 'Хорошее',
+  fair: 'Удовлетворительное',
+  poor: 'Плохое',
+  damaged: 'Повреждено',
 };
 
 /**

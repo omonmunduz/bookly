@@ -34,8 +34,8 @@ import {
 import type { AssignmentFilters } from '@/lib/types/ebike';
 
 export const metadata = {
-  title: 'Assignments',
-  description: 'Manage bike assignments',
+  title: 'Назначения',
+  description: 'Управление назначениями велосипедов',
 };
 
 interface PageProps {
@@ -64,15 +64,15 @@ export default async function AssignmentsPage({ searchParams }: PageProps) {
     <div className="container mx-auto max-w-7xl p-4 md:p-8">
       <header className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Assignments</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Назначения</h1>
           <p className="text-sm text-muted-foreground">
-            Track bike rentals and returns
+            Отслеживание аренды и возврата велосипедов
           </p>
         </div>
         <Button asChild>
           <Link href="/assignments/new">
             <Plus className="h-4 w-4" />
-            Assign bike
+            Назначить велосипед
           </Link>
         </Button>
       </header>
@@ -96,10 +96,10 @@ function StatusFilter({
   showOverdue: boolean;
 }) {
   const filters = [
-    { value: '', label: 'All', href: '/assignments' },
-    { value: 'true', label: 'Active', href: '/assignments?active=true' },
-    { value: 'false', label: 'Returned', href: '/assignments?active=false' },
-    { value: 'overdue', label: 'Overdue', href: '/assignments?overdue=true' },
+    { value: '', label: 'Все', href: '/assignments' },
+    { value: 'true', label: 'Активные', href: '/assignments?active=true' },
+    { value: 'false', label: 'Возвращенные', href: '/assignments?active=false' },
+    { value: 'overdue', label: 'Просроченные', href: '/assignments?overdue=true' },
   ];
 
   const currentValue = showOverdue ? 'overdue' : currentFilter || '';

@@ -17,7 +17,7 @@ export function DeleteIncomeButton({ incomeId }: DeleteIncomeButtonProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
-    if (!confirm('Are you sure you want to delete this income entry?')) {
+    if (!confirm('Вы уверены, что хотите удалить эту запись дохода?')) {
       return;
     }
 
@@ -26,13 +26,13 @@ export function DeleteIncomeButton({ incomeId }: DeleteIncomeButtonProps) {
 
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Income entry deleted',
+          title: 'Успешно',
+          description: 'Запись дохода удалена',
         });
         router.refresh();
       } else {
         toast({
-          title: 'Error',
+          title: 'Ошибка',
           description: result.error,
           variant: 'destructive',
         });
@@ -46,7 +46,7 @@ export function DeleteIncomeButton({ incomeId }: DeleteIncomeButtonProps) {
       size="icon"
       onClick={handleDelete}
       disabled={isPending}
-      title="Delete income entry"
+      title="Удалить запись дохода"
     >
       {isPending ? (
         <Loader2 className="h-4 w-4 animate-spin" />

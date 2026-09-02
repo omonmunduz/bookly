@@ -8,15 +8,15 @@ interface EarningsActivityLogProps {
 }
 
 const ACTIVITY_LABELS: Record<string, string> = {
-  period_created: 'Period Created',
-  period_updated: 'Period Updated',
-  period_deleted: 'Period Deleted',
-  status_changed: 'Status Changed',
-  marked_as_paid: 'Marked as Paid',
-  income_added: 'Income Added',
-  income_deleted: 'Income Deleted',
-  deduction_added: 'Deduction Added',
-  deduction_deleted: 'Deduction Deleted',
+  period_created: 'Период создан',
+  period_updated: 'Период обновлен',
+  period_deleted: 'Период удален',
+  status_changed: 'Статус изменен',
+  marked_as_paid: 'Отмечен как оплачено',
+  income_added: 'Доход добавлен',
+  income_deleted: 'Доход удален',
+  deduction_added: 'Удержание добавлено',
+  deduction_deleted: 'Удержание удалено',
 };
 
 function formatActivityDetails(
@@ -27,21 +27,21 @@ function formatActivityDetails(
 
   switch (activityType) {
     case 'income_added':
-      return `Added ${formatCurrency(details.amount)}${details.notes ? ` — ${details.notes}` : ''}`;
+      return `Добавлено ${formatCurrency(details.amount)}${details.notes ? ` — ${details.notes}` : ''}`;
     case 'income_deleted':
-      return `Deleted ${formatCurrency(details.amount)}${details.notes ? ` — ${details.notes}` : ''}`;
+      return `Удалено ${formatCurrency(details.amount)}${details.notes ? ` — ${details.notes}` : ''}`;
     case 'deduction_added':
-      return `Added ${details.type} deduction: ${formatCurrency(details.amount)} — ${details.description}`;
+      return `Добавлено удержание ${details.type}: ${formatCurrency(details.amount)} — ${details.description}`;
     case 'deduction_deleted':
-      return `Deleted ${details.type} deduction: ${formatCurrency(details.amount)} — ${details.description}`;
+      return `Удалено удержание ${details.type}: ${formatCurrency(details.amount)} — ${details.description}`;
     case 'status_changed':
-      return `Changed from ${details.from} to ${details.to}`;
+      return `Изменено с ${details.from} на ${details.to}`;
     case 'marked_as_paid':
-      return `Paid ${formatCurrency(details.amount)}`;
+      return `Оплачено ${formatCurrency(details.amount)}`;
     case 'period_created':
-      return 'Created earnings period';
+      return 'Создан период выплат';
     case 'period_updated':
-      return details.field ? `Updated ${details.field}` : 'Updated period';
+      return details.field ? `Обновлено поле: ${details.field}` : 'Обновлен период';
     default:
       return '';
   }
@@ -52,8 +52,8 @@ export function EarningsActivityLog({ activities }: EarningsActivityLogProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Activity History</CardTitle>
-          <CardDescription>No activity recorded yet</CardDescription>
+          <CardTitle>История действий</CardTitle>
+          <CardDescription>Действия пока не записаны</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -62,9 +62,9 @@ export function EarningsActivityLog({ activities }: EarningsActivityLogProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Activity History</CardTitle>
+        <CardTitle>История действий</CardTitle>
         <CardDescription>
-          Complete audit trail of all actions on this earnings period
+          Полный журнал всех действий с этим периодом выплат
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -87,7 +87,7 @@ export function EarningsActivityLog({ activities }: EarningsActivityLogProps) {
                   {formatActivityDetails(activity.activity_type, activity.details)}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  by {activity.actor.full_name} ({activity.actor.email})
+                  пользователем {activity.actor.full_name} ({activity.actor.email})
                 </p>
               </div>
             </div>

@@ -37,14 +37,14 @@ export function MarkAsPaidButton({
 
       if (result.success) {
         toast({
-          title: 'Success',
-          description: 'Earnings period marked as paid',
+          title: 'Успешно',
+          description: 'Период выплат отмечен как оплаченный',
         });
         setOpen(false);
         router.refresh();
       } else {
         toast({
-          title: 'Error',
+          title: 'Ошибка',
           description: result.error,
           variant: 'destructive',
         });
@@ -61,7 +61,7 @@ export function MarkAsPaidButton({
           variant="ghost"
           size="icon"
           disabled={isPaid || isPending}
-          title={isPaid ? 'Already paid' : 'Mark as paid'}
+          title={isPaid ? 'Уже оплачено' : 'Отметить как оплачено'}
           onClick={(e) => {
             e.preventDefault();
             setOpen(true);
@@ -72,9 +72,9 @@ export function MarkAsPaidButton({
         <ConfirmDialog
           open={open}
           onOpenChange={setOpen}
-          title="Mark as Paid?"
-          description={`Confirm that ${courierName} has been paid ${formatCurrency(netPayout)} for this period. This action cannot be undone. The period will be locked and no further changes can be made.`}
-          confirmLabel="Confirm Payment"
+          title="Отметить как оплачено?"
+          description={`Подтвердите, что курьеру ${courierName} была выплачена сумма ${formatCurrency(netPayout)} за этот период. Это действие нельзя отменить. Период будет заблокирован, и дальнейшие изменения будут невозможны.`}
+          confirmLabel="Подтвердить оплату"
           isPending={isPending}
           onConfirm={handleMarkAsPaid}
         />
@@ -91,14 +91,14 @@ export function MarkAsPaidButton({
       >
         {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
         <Check className="h-4 w-4" />
-        {isPaid ? 'Already Paid' : 'Mark as Paid'}
+        {isPaid ? 'Уже оплачено' : 'Отметить как оплачено'}
       </Button>
       <ConfirmDialog
         open={open}
         onOpenChange={setOpen}
-        title="Mark as Paid?"
-        description={`Confirm that ${courierName} has been paid ${formatCurrency(netPayout)} for this period. This action cannot be undone. The period will be locked and no further changes can be made.`}
-        confirmLabel="Confirm Payment"
+        title="Отметить как оплачено?"
+        description={`Подтвердите, что курьеру ${courierName} была выплачена сумма ${formatCurrency(netPayout)} за этот период. Это действие нельзя отменить. Период будет заблокирован, и дальнейшие изменения будут невозможны.`}
+        confirmLabel="Подтвердить оплату"
         isPending={isPending}
         onConfirm={handleMarkAsPaid}
       />
