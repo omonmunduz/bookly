@@ -1,7 +1,7 @@
 /**
  * INSPECTIONS LIST
  *
- * Condition checks across the fleet, newest first, with follow-ups called out.
+ * Проверки состояния по всему парку, newest first, with follow-ups called out.
  *
  * An inspection sets the bike's next status, so the ones flagged
  * requires_maintenance are the actionable half of this page — they are counted
@@ -31,8 +31,8 @@ import {
 } from '@/features/maintenance/labels';
 
 export const metadata = {
-  title: 'Inspections',
-  description: 'Bike condition inspections',
+  title: 'Инспекции',
+  description: 'Инспекции состояния велосипедов',
 };
 
 export default async function InspectionsPage() {
@@ -43,21 +43,21 @@ export default async function InspectionsPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/maintenance" aria-label="Back to maintenance">
+            <Link href="/maintenance" aria-label="Назад к обслуживанию">
               <ArrowLeft className="h-4 w-4" />
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Inspections</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Инспекции</h1>
             <p className="text-muted-foreground">
-              Condition checks across the fleet
+              Проверки состояния по всему парку
             </p>
           </div>
         </div>
         <Button asChild>
           <Link href="/maintenance/inspections/new">
             <Plus className="h-4 w-4" />
-            New inspection
+            Новая инспекция
           </Link>
         </Button>
       </div>
@@ -76,7 +76,7 @@ async function InspectionsContent() {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Could not load inspections</AlertTitle>
+        <AlertTitle>Не удалось загрузить инспекции</AlertTitle>
         <AlertDescription>{result.error}</AlertDescription>
       </Alert>
     );
@@ -91,13 +91,13 @@ async function InspectionsContent() {
     return (
       <EmptyState
         icon={<ClipboardCheck className="h-10 w-10" />}
-        title="No inspections yet"
-        description="Record a condition check to start tracking how the fleet is holding up."
+        title="Инспекций пока нет"
+        description="Запишите проверку состояния, чтобы начать отслеживать состояние парка."
         action={
           <Button asChild>
             <Link href="/maintenance/inspections/new">
               <Plus className="h-4 w-4" />
-              New inspection
+              Новая инспекция
             </Link>
           </Button>
         }

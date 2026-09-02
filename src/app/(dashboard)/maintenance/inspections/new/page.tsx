@@ -15,7 +15,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { CreateInspectionForm } from '@/components/maintenance/create-inspection-form';
 
 export const metadata = {
-  title: 'New inspection',
+  title: 'Новая инспекция',
   description: 'Record a bike inspection',
 };
 
@@ -31,7 +31,7 @@ export default async function NewInspectionPage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">New inspection</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Новая инспекция</h1>
           <p className="text-muted-foreground">Record the condition of a bike</p>
         </div>
       </div>

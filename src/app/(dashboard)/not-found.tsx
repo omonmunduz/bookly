@@ -26,11 +26,11 @@ export default function DashboardNotFound() {
     <div className="mx-auto max-w-5xl p-4 sm:p-6">
       <EmptyState
         icon={<FileQuestion className="h-10 w-10" aria-hidden="true" />}
-        title="We couldn't find that"
-        description="It may have been deleted, or the link might be wrong. Nothing has been changed."
+        title="Мы не смогли это найти"
+        description="Возможно, это было удалено, или ссылка неверная. Ничего не было изменено."
         action={
           <Button asChild variant="outline">
-            <Link href={ROUTES.dashboard.home}>Back to dashboard</Link>
+            <Link href={ROUTES.dashboard.home}>Назад на панель управления</Link>
           </Button>
         }
       />

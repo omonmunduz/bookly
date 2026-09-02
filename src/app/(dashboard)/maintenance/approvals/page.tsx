@@ -32,8 +32,8 @@ import { ApproveMaintenanceButton } from '@/components/maintenance/approve-butto
 import { MAINTENANCE_TYPE_LABELS } from '@/features/maintenance/labels';
 
 export const metadata = {
-  title: 'Maintenance approvals',
-  description: 'Review and approve maintenance records',
+  title: 'Одобрение обслуживания',
+  description: 'Проверка и одобрение записей обслуживания',
 };
 
 export default async function MaintenanceApprovalsPage() {
@@ -43,16 +43,16 @@ export default async function MaintenanceApprovalsPage() {
     <div className="container mx-auto max-w-4xl space-y-6 p-4 md:p-8">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/maintenance" aria-label="Back to maintenance">
+          <Link href="/maintenance" aria-label="Назад к обслуживанию">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            Maintenance approvals
+            Одобрение обслуживания
           </h1>
           <p className="text-muted-foreground">
-            Repairs waiting for your sign-off
+            Ремонты ожидают вашего одобрения
           </p>
         </div>
       </div>
@@ -71,7 +71,7 @@ async function ApprovalsContent() {
     return (
       <Alert variant="destructive">
         <AlertCircle className="h-4 w-4" />
-        <AlertTitle>Could not load pending approvals</AlertTitle>
+        <AlertTitle>Не удалось загрузить ожидающие одобрения</AlertTitle>
         <AlertDescription>{result.error}</AlertDescription>
       </Alert>
     );
@@ -83,11 +83,11 @@ async function ApprovalsContent() {
     return (
       <EmptyState
         icon={<CheckCircle2 className="h-10 w-10" />}
-        title="Nothing to approve"
-        description="Every maintenance record has been reviewed."
+        title="Нечего одобрять"
+        description="Все записи обслуживания проверены."
         action={
           <Button variant="outline" asChild>
-            <Link href="/maintenance">Back to maintenance</Link>
+            <Link href="/maintenance">Назад к обслуживанию</Link>
           </Button>
         }
       />

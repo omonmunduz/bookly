@@ -59,7 +59,7 @@ export default async function MaintenanceDetailPage({
     <div className="container mx-auto max-w-4xl space-y-6 p-4 md:p-8">
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" asChild>
-          <Link href="/maintenance" aria-label="Back to maintenance">
+          <Link href="/maintenance" aria-label="Назад к обслуживанию">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>

@@ -43,23 +43,23 @@ export default function DashboardError({ error, reset }: DashboardErrorProps) {
     <div className="mx-auto max-w-5xl p-4 sm:p-6">
       <EmptyState
         icon={<AlertTriangle className="h-8 w-8" aria-hidden="true" />}
-        title="Something went wrong loading this page"
+        title="Что-то пошло не так при загрузке этой страницы"
         // No stack trace and no Postgres message. The audience is a shop owner,
         // and the production message would be a meaningless generic string
         // anyway. The digest is included because it is the one thing that makes
         // a support conversation actionable.
         description={
           error.digest
-            ? `This is usually temporary. Try again, and if it keeps happening quote reference ${error.digest}.`
-            : 'This is usually temporary. Try again in a moment.'
+            ? `Обычно это временная проблема. Попробуйте снова, и если это продолжается, укажите код ${error.digest}.`
+            : 'Обычно это временная проблема. Попробуйте снова через минуту.'
         }
         action={
           <div className="flex flex-wrap items-center justify-center gap-2">
             {/* reset() re-renders the segment without a full page load, so a
                 transient query failure recovers in place. */}
-            <Button onClick={reset}>Try again</Button>
+            <Button onClick={reset}>Попробовать снова</Button>
             <Button variant="outline" asChild>
-              <Link href={ROUTES.dashboard.home}>Back to dashboard</Link>
+              <Link href={ROUTES.dashboard.home}>Назад на панель управления</Link>
             </Button>
           </div>
         }
