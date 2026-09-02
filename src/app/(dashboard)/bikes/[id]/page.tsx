@@ -12,7 +12,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Редактировать, Wrench, History, Батарея, MapPin } from 'lucide-react';
+import { ArrowLeft, Edit, Wrench, History, Battery, MapPin } from 'lucide-react';
 
 import { requireServerUser } from '@/lib/supabase/session';
 import {
@@ -77,7 +77,7 @@ export default async function BikeDetailPage({ params }: PageProps) {
           <div className="flex gap-2">
             <Button variant="outline" asChild>
               <Link href={`/bikes/${bike.id}/edit`}>
-                <Редактировать className="mr-2 h-4 w-4" />
+                <Edit className="mr-2 h-4 w-4" />
                 Редактировать
               </Link>
             </Button>
@@ -115,7 +115,7 @@ export default async function BikeDetailPage({ params }: PageProps) {
                     Батарея
                   </dt>
                   <dd className="mt-1 flex items-center gap-2">
-                    <Батарея className="h-4 w-4 text-muted-foreground" />
+                    <Battery className="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">
                       {bike.battery_info || 'Не указано'}
                     </span>

@@ -12,7 +12,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Редактировать, Phone, IdCard, History } from 'lucide-react';
+import { ArrowLeft, Edit, Phone, IdCard, History } from 'lucide-react';
 
 import { requireServerUser } from '@/lib/supabase/session';
 import { getCourierAction } from '@/app/actions/couriers';
@@ -70,7 +70,7 @@ export default async function CourierDetailPage({ params }: PageProps) {
           <div className="flex gap-2">
             <Button variant="outline" asChild>
               <Link href={`/couriers/${courier.id}/edit`}>
-                <Редактировать className="mr-2 h-4 w-4" />
+                <Edit className="mr-2 h-4 w-4" />
                 Редактировать
               </Link>
             </Button>
