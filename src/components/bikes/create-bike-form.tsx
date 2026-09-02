@@ -43,7 +43,7 @@ export function CreateBikeForm() {
     if (rawPrice) {
       const parsed = Number(rawPrice);
       if (Number.isNaN(parsed) || parsed < 0) {
-        setError('Enter a purchase price of zero or more, or leave it blank.');
+        setError('Введите цену покупки от нуля или оставьте поле пустым.');
         return;
       }
       purchasePrice = parsed;
@@ -78,23 +78,23 @@ export function CreateBikeForm() {
 
       <div className="space-y-2">
         <Label htmlFor="model">
-          Model <span className="text-destructive">*</span>
+          Модель <span className="text-destructive">*</span>
         </Label>
         <Input
           id="model"
           name="model"
-          placeholder="e.g. Urban E-Bike X1"
+          placeholder="например: Городской E-Bike X1"
           required
           maxLength={100}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="serial_number">Serial number</Label>
+        <Label htmlFor="serial_number">Серийный номер</Label>
         <Input
           id="serial_number"
           name="serial_number"
-          placeholder="e.g. SN123456789"
+          placeholder="например: SN123456789"
           maxLength={100}
         />
         <p className="text-xs text-muted-foreground">
@@ -120,12 +120,12 @@ export function CreateBikeForm() {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="purchase_date">Purchase date</Label>
+          <Label htmlFor="purchase_date">Дата покупки</Label>
           <Input id="purchase_date" name="purchase_date" type="date" />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="purchase_price">Purchase price</Label>
+          <Label htmlFor="purchase_price">Цена покупки</Label>
           <Input
             id="purchase_price"
             name="purchase_price"
@@ -149,7 +149,7 @@ export function CreateBikeForm() {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="condition_notes">Condition notes</Label>
+        <Label htmlFor="condition_notes">Примечания о состоянии</Label>
         <Textarea
           id="condition_notes"
           name="condition_notes"
@@ -172,7 +172,7 @@ export function CreateBikeForm() {
           Add bike
         </Button>
         <Button type="button" variant="outline" asChild disabled={isPending}>
-          <Link href="/bikes">Cancel</Link>
+          <Link href="/bikes">Отмена</Link>
         </Button>
       </div>
     </form>

@@ -43,14 +43,14 @@ async function EditEarningsPeriodContent({ periodId }: { periodId: string }) {
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Edit Earnings Period</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Редактировать Earnings Period</h1>
           <p className="text-muted-foreground">
             Update gross earnings and manage deductions
           </p>
         </div>
       </div>
 
-      {/* Edit Form */}
+      {/* Редактировать Form */}
       <EditEarningsForm period={period} />
     </>
   );

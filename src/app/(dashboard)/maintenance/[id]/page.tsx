@@ -107,7 +107,7 @@ async function MaintenanceDetailContent({
         <CardHeader>
           <div className="flex items-start justify-between gap-4">
             <div>
-              <CardTitle>Status</CardTitle>
+              <CardTitle>Статус</CardTitle>
               <CardDescription>Approval state of this record</CardDescription>
             </div>
             <Badge

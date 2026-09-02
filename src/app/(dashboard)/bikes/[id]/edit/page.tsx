@@ -39,7 +39,7 @@ export default async function EditBikePage({
             Back
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold tracking-tight">Edit bike</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать bike</h1>
         <p className="text-muted-foreground">
           Update {bike.bike_number} details
         </p>

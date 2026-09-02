@@ -41,7 +41,7 @@ async function EditUserContent({ userId }: { userId: string }) {
           </Link>
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Edit Team Member</h1>
+          <h1 className="text-3xl font-bold tracking-tight">Редактировать Team Member</h1>
           <p className="text-muted-foreground">
             Update user details and role
           </p>

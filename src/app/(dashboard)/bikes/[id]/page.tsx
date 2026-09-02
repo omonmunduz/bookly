@@ -12,7 +12,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Edit, Wrench, History, Battery, MapPin } from 'lucide-react';
+import { ArrowLeft, Редактировать, Wrench, History, Батарея, MapPin } from 'lucide-react';
 
 import { requireServerUser } from '@/lib/supabase/session';
 import {
@@ -77,14 +77,14 @@ export default async function BikeDetailPage({ params }: PageProps) {
           <div className="flex gap-2">
             <Button variant="outline" asChild>
               <Link href={`/bikes/${bike.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
+                <Редактировать className="mr-2 h-4 w-4" />
+                Редактировать
               </Link>
             </Button>
             {bike.status === 'available' && (
               <Button asChild>
                 <Link href={`/assignments/new?bikeId=${bike.id}`}>
-                  Assign Bike
+                  Назначить велосипед
                 </Link>
               </Button>
             )}
@@ -98,13 +98,13 @@ export default async function BikeDetailPage({ params }: PageProps) {
           {/* Basic Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Bike Information</CardTitle>
+              <CardTitle>Информация о велосипеде</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm font-medium text-muted-foreground">
-                    Status
+                    Статус
                   </dt>
                   <dd className="mt-1">
                     <BikeStatusBadge status={bike.status} />
@@ -112,18 +112,18 @@ export default async function BikeDetailPage({ params }: PageProps) {
                 </div>
                 <div>
                   <dt className="text-sm font-medium text-muted-foreground">
-                    Battery
+                    Батарея
                   </dt>
                   <dd className="mt-1 flex items-center gap-2">
-                    <Battery className="h-4 w-4 text-muted-foreground" />
+                    <Батарея className="h-4 w-4 text-muted-foreground" />
                     <span className="font-medium">
-                      {bike.battery_info || 'Not recorded'}
+                      {bike.battery_info || 'Не указано'}
                     </span>
                   </dd>
                 </div>
                 <div>
                   <dt className="text-sm font-medium text-muted-foreground">
-                    Serial Number
+                    Серийный номер
                   </dt>
                   <dd className="mt-1 font-medium">
                     {bike.serial_number || '—'}
@@ -142,7 +142,7 @@ export default async function BikeDetailPage({ params }: PageProps) {
                   <Separator />
                   <div>
                     <dt className="text-sm font-medium text-muted-foreground">
-                      Condition notes
+                      Примечания о состоянии
                     </dt>
                     <dd className="mt-1 text-sm">{bike.condition_notes}</dd>
                   </div>
@@ -151,12 +151,12 @@ export default async function BikeDetailPage({ params }: PageProps) {
             </CardContent>
           </Card>
 
-          {/* Current Assignment */}
+          {/* Текущее назначение */}
           <Suspense fallback={<CardSkeleton />}>
             <CurrentAssignment bikeId={bike.id} />
           </Suspense>
 
-          {/* Assignment History */}
+          {/* История назначений */}
           <Suspense fallback={<CardSkeleton />}>
             <AssignmentHistory bikeId={bike.id} />
           </Suspense>
@@ -236,7 +236,7 @@ async function CurrentAssignment({ bikeId }: { bikeId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Current Assignment</CardTitle>
+        <CardTitle>Текущее назначение</CardTitle>
         <CardDescription>
           Assigned on {assignedDate.toLocaleDateString()}
         </CardDescription>
@@ -266,7 +266,7 @@ async function CurrentAssignment({ bikeId }: { bikeId: string }) {
           </div>
         )}
         <Button variant="outline" size="sm" asChild className="w-full">
-          <Link href={`/assignments/${assignment.id}`}>View Details</Link>
+          <Link href={`/assignments/${assignment.id}`}>Просмотреть</Link>
         </Button>
       </CardContent>
     </Card>
@@ -280,7 +280,7 @@ async function AssignmentHistory({ bikeId }: { bikeId: string }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Assignment History</CardTitle>
+          <CardTitle>История назначений</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">{result.error}</p>
@@ -294,7 +294,7 @@ async function AssignmentHistory({ bikeId }: { bikeId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Assignment History</CardTitle>
+        <CardTitle>История назначений</CardTitle>
         <CardDescription>
           {history.length} {history.length === 1 ? 'assignment' : 'assignments'}
         </CardDescription>
@@ -378,7 +378,7 @@ async function MaintenanceOverview({ bikeId }: { bikeId: string }) {
   const records = result.data;
 
   if (records.length === 0) {
-    return <p className="text-sm text-muted-foreground">No maintenance records yet.</p>;
+    return <p className="text-sm text-muted-foreground">Нет записей обслуживания yet.</p>;
   }
 
   return (

@@ -89,7 +89,7 @@ export function CreateAssignmentForm({
           defaultValue={defaultBikeId ?? ''}
         >
           <option value="" disabled>
-            Select a bike
+            Выберите велосипед
           </option>
           {bikes.map((bike) => (
             <option key={bike.id} value={bike.id}>
@@ -113,7 +113,7 @@ export function CreateAssignmentForm({
           defaultValue={defaultCourierId ?? ''}
         >
           <option value="" disabled>
-            Select a courier
+            Выберите курьера
           </option>
           {couriers.map((courier) => (
             <option key={courier.id} value={courier.id}>
@@ -164,7 +164,7 @@ export function CreateAssignmentForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="assignment_notes">Notes</Label>
+        <Label htmlFor="assignment_notes">Примечания</Label>
         <Textarea
           id="assignment_notes"
           name="assignment_notes"
@@ -187,7 +187,7 @@ export function CreateAssignmentForm({
           Assign bike
         </Button>
         <Button type="button" variant="outline" asChild disabled={isPending}>
-          <Link href="/assignments">Cancel</Link>
+          <Link href="/assignments">Отмена</Link>
         </Button>
       </div>
     </form>

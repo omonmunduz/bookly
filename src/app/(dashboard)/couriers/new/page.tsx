@@ -13,8 +13,8 @@ import {
 import { CreateCourierForm } from '@/components/couriers/create-courier-form';
 
 export const metadata = {
-  title: 'Add New Courier',
-  description: 'Add a new courier',
+  title: 'Добавить нового курьера',
+  description: 'Добавить нового курьера',
 };
 
 export default async function NewCourierPage() {
@@ -30,20 +30,19 @@ export default async function NewCourierPage() {
         </Button>
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">
-            Add new courier
+            Добавить нового курьера
           </h1>
           <p className="text-sm text-muted-foreground">
-            Add a new courier to the system
+            Добавить нового курьера в систему
           </p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Courier information</CardTitle>
+          <CardTitle>Информация о курьере</CardTitle>
           <CardDescription>
-            Enter the details for the new courier. Fields marked with * are
-            required.
+            Введите данные для нового курьера. Поля, отмеченные *, обязательны для заполнения.
           </CardDescription>
         </CardHeader>
         <CardContent>

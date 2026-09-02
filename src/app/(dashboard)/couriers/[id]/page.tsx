@@ -12,7 +12,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ArrowLeft, Edit, Phone, IdCard, History } from 'lucide-react';
+import { ArrowLeft, Редактировать, Phone, IdCard, History } from 'lucide-react';
 
 import { requireServerUser } from '@/lib/supabase/session';
 import { getCourierAction } from '@/app/actions/couriers';
@@ -70,8 +70,8 @@ export default async function CourierDetailPage({ params }: PageProps) {
           <div className="flex gap-2">
             <Button variant="outline" asChild>
               <Link href={`/couriers/${courier.id}/edit`}>
-                <Edit className="mr-2 h-4 w-4" />
-                Edit
+                <Редактировать className="mr-2 h-4 w-4" />
+                Редактировать
               </Link>
             </Button>
             <Suspense fallback={null}>
@@ -87,13 +87,13 @@ export default async function CourierDetailPage({ params }: PageProps) {
           {/* Basic Info */}
           <Card>
             <CardHeader>
-              <CardTitle>Courier Information</CardTitle>
+              <CardTitle>Информация о курьере</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <dt className="text-sm font-medium text-muted-foreground">
-                    Status
+                    Статус
                   </dt>
                   <dd className="mt-1">
                     <CourierStatusBadge status={courier.status} />
@@ -158,12 +158,12 @@ export default async function CourierDetailPage({ params }: PageProps) {
             </CardContent>
           </Card>
 
-          {/* Current Assignment */}
+          {/* Текущее назначение */}
           <Suspense fallback={<CardSkeleton />}>
             <CurrentAssignment courierId={courier.id} />
           </Suspense>
 
-          {/* Assignment History */}
+          {/* История назначений */}
           <Suspense fallback={<CardSkeleton />}>
             <AssignmentHistory courierId={courier.id} />
           </Suspense>
@@ -216,7 +216,7 @@ async function AssignBikeButton({ courierId }: { courierId: string }) {
   return (
     <Button asChild>
       <Link href={`/assignments/new?courierId=${courierId}`}>
-        Assign Bike
+        Назначить велосипед
       </Link>
     </Button>
   );
@@ -229,7 +229,7 @@ async function CurrentAssignment({ courierId }: { courierId: string }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Current Assignment</CardTitle>
+          <CardTitle>Текущее назначение</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">No active bike assignment.</p>
@@ -244,7 +244,7 @@ async function CurrentAssignment({ courierId }: { courierId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Current Assignment</CardTitle>
+        <CardTitle>Текущее назначение</CardTitle>
         <CardDescription>
           Assigned on {assignedDate.toLocaleDateString()}
         </CardDescription>
@@ -274,7 +274,7 @@ async function CurrentAssignment({ courierId }: { courierId: string }) {
           </div>
         )}
         <Button variant="outline" size="sm" asChild className="w-full">
-          <Link href={`/assignments/${assignment.id}`}>View Details</Link>
+          <Link href={`/assignments/${assignment.id}`}>Просмотреть</Link>
         </Button>
       </CardContent>
     </Card>
@@ -288,7 +288,7 @@ async function AssignmentHistory({ courierId }: { courierId: string }) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Assignment History</CardTitle>
+          <CardTitle>История назначений</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">{result.error}</p>
@@ -302,7 +302,7 @@ async function AssignmentHistory({ courierId }: { courierId: string }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Assignment History</CardTitle>
+        <CardTitle>История назначений</CardTitle>
         <CardDescription>
           {history.length} completed {history.length === 1 ? 'assignment' : 'assignments'}
         </CardDescription>
@@ -362,7 +362,7 @@ async function CourierStats({ courierId }: { courierId: string }) {
         <dd className="mt-1 text-2xl font-semibold">{totalAssignments}</dd>
       </div>
       <div>
-        <dt className="text-sm text-muted-foreground">Active Assignments</dt>
+        <dt className="text-sm text-muted-foreground">Активные назначения</dt>
         <dd className="mt-1 text-2xl font-semibold">{activeAssignments}</dd>
       </div>
       <div>

@@ -165,7 +165,7 @@ export function CreateInspectionForm({ bikes }: CreateInspectionFormProps) {
               className={SELECT_CLASS}
             >
               <option value="" disabled>
-                Select a bike
+                Выберите велосипед
               </option>
               {bikes.map((bike) => (
                 <option key={bike.id} value={bike.id}>
@@ -316,7 +316,7 @@ export function CreateInspectionForm({ bikes }: CreateInspectionFormProps) {
           <div className="flex gap-3">
             <Button type="submit" disabled={isPending}>
               {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-              Save inspection
+              Сохранить inspection
             </Button>
             <Button type="button" variant="outline" asChild disabled={isPending}>
               <Link href="/maintenance/inspections">Cancel</Link>

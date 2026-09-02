@@ -13,8 +13,8 @@ import {
 import { CreateBikeForm } from '@/components/bikes/create-bike-form';
 
 export const metadata = {
-  title: 'Add New Bike',
-  description: 'Add a new bike to the fleet',
+  title: 'Добавить новый велосипед',
+  description: 'Добавить новый велосипед в парк',
 };
 
 export default async function NewBikePage() {
@@ -29,19 +29,18 @@ export default async function NewBikePage() {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Add new bike</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Добавить новый велосипед</h1>
           <p className="text-sm text-muted-foreground">
-            Add a new bike to your fleet
+            Добавить новый велосипед в ваш парк
           </p>
         </div>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Bike information</CardTitle>
+          <CardTitle>Информация о велосипеде</CardTitle>
           <CardDescription>
-            Enter the details for the new bike. Fields marked with * are
-            required.
+            Введите данные для нового велосипеда. Поля, отмеченные *, обязательны для заполнения.
           </CardDescription>
         </CardHeader>
         <CardContent>

@@ -45,7 +45,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
     if (rawPrice) {
       const parsed = Number(rawPrice);
       if (Number.isNaN(parsed) || parsed < 0) {
-        setError('Enter a purchase price of zero or more, or leave it blank.');
+        setError('Введите цену покупки от нуля или оставьте поле пустым.');
         return;
       }
       purchasePrice = parsed;
@@ -80,7 +80,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="model">
-          Model <span className="text-destructive">*</span>
+          Модель <span className="text-destructive">*</span>
         </Label>
         <Input
           id="model"
@@ -92,7 +92,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="serial_number">Serial number</Label>
+        <Label htmlFor="serial_number">Серийный номер</Label>
         <Input
           id="serial_number"
           name="serial_number"
@@ -119,7 +119,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="purchase_date">Purchase date</Label>
+          <Label htmlFor="purchase_date">Дата покупки</Label>
           <Input
             id="purchase_date"
             name="purchase_date"
@@ -129,7 +129,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="purchase_price">Purchase price</Label>
+          <Label htmlFor="purchase_price">Цена покупки</Label>
           <Input
             id="purchase_price"
             name="purchase_price"
@@ -153,7 +153,7 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="condition_notes">Condition notes</Label>
+        <Label htmlFor="condition_notes">Примечания о состоянии</Label>
         <Textarea
           id="condition_notes"
           name="condition_notes"
@@ -165,11 +165,11 @@ export function EditBikeForm({ bike }: EditBikeFormProps) {
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="button" variant="outline" asChild disabled={isPending}>
-          <Link href={`/bikes/${bike.id}`}>Cancel</Link>
+          <Link href={`/bikes/${bike.id}`}>Отмена</Link>
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Save changes
+          Сохранить changes
         </Button>
       </div>
     </form>

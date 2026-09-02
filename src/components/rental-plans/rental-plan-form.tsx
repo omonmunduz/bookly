@@ -99,7 +99,7 @@ export function RentalPlanForm({ plan }: RentalPlanFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="name">
-          Plan name <span className="text-destructive">*</span>
+          Название тарифа <span className="text-destructive">*</span>
         </Label>
         <Input
           id="name"
@@ -162,7 +162,7 @@ export function RentalPlanForm({ plan }: RentalPlanFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="price">
-          Price <span className="text-destructive">*</span>
+          Цена <span className="text-destructive">*</span>
         </Label>
         <Input
           id="price"
@@ -201,7 +201,7 @@ export function RentalPlanForm({ plan }: RentalPlanFormProps) {
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          {plan ? 'Save changes' : 'Create plan'}
+          {plan ? 'Сохранить changes' : 'Create plan'}
         </Button>
       </div>
     </form>

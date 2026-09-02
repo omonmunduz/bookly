@@ -1,5 +1,5 @@
 /**
- * Return Bike Page
+ * Вернуть велосипед Page
  *
  * Closes an open assignment. Mechanics reach this page too — they are the ones
  * receiving bikes back — so it requires only an active user, not a manager.

@@ -39,7 +39,7 @@ export default async function EditCourierPage({
             Back
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold tracking-tight">Edit courier</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать courier</h1>
         <p className="text-muted-foreground">
           Update {courier.full_name} ({courier.courier_code})
         </p>

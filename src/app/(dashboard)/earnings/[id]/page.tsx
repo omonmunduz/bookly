@@ -81,7 +81,7 @@ async function EarningsPeriodContent({ periodId }: { periodId: string }) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
-            Courier Information
+            Информация о курьере
           </CardTitle>
         </CardHeader>
         <CardContent className="grid gap-4 md:grid-cols-3">

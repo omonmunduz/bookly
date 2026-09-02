@@ -47,7 +47,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
 
     if (idNumber && idNumber.length < 5) {
       setError(
-        'An identification number must be at least 5 characters, or left blank.'
+        'ИНН должен содержать не менее 5 символов или быть пустым.'
       );
       return;
     }
@@ -81,7 +81,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="full_name">
-          Full name <span className="text-destructive">*</span>
+          Полное имя <span className="text-destructive">*</span>
         </Label>
         <Input
           id="full_name"
@@ -95,7 +95,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
 
       <div className="space-y-2">
         <Label htmlFor="phone">
-          Phone number <span className="text-destructive">*</span>
+          Номер телефона <span className="text-destructive">*</span>
         </Label>
         <Input
           id="phone"
@@ -111,7 +111,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="identification_number">Identification number</Label>
+        <Label htmlFor="identification_number">ИНН</Label>
         <Input
           id="identification_number"
           name="identification_number"
@@ -121,7 +121,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="address">Address</Label>
+        <Label htmlFor="address">Адрес</Label>
         <Textarea
           id="address"
           name="address"
@@ -132,7 +132,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="emergency_contact">Emergency contact</Label>
+        <Label htmlFor="emergency_contact">Контакт для экстренной связи</Label>
         <Input
           id="emergency_contact"
           name="emergency_contact"
@@ -142,7 +142,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="yandex_identifier">Yandex identifier</Label>
+        <Label htmlFor="yandex_identifier">ID Яндекс</Label>
         <Input
           id="yandex_identifier"
           name="yandex_identifier"
@@ -152,7 +152,7 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="notes">Notes</Label>
+        <Label htmlFor="notes">Примечания</Label>
         <Textarea
           id="notes"
           name="notes"
@@ -164,11 +164,11 @@ export function EditCourierForm({ courier }: EditCourierFormProps) {
 
       <div className="flex justify-end gap-3 pt-2">
         <Button type="button" variant="outline" asChild disabled={isPending}>
-          <Link href={`/couriers/${courier.id}`}>Cancel</Link>
+          <Link href={`/couriers/${courier.id}`}>Отмена</Link>
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
-          Save changes
+          Сохранить changes
         </Button>
       </div>
     </form>

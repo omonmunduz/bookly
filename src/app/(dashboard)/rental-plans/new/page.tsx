@@ -14,8 +14,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { RentalPlanForm } from '@/components/rental-plans/rental-plan-form';
 
 export const metadata = {
-  title: 'New Rental Plan',
-  description: 'Create a new pricing plan for bike rentals',
+  title: 'Новый тарифный план',
+  description: 'Создать новый тарифный план для аренды велосипедов',
 };
 
 export default async function NewRentalPlanPage() {
@@ -27,29 +27,27 @@ export default async function NewRentalPlanPage() {
         <Button variant="ghost" size="sm" asChild>
           <Link href="/rental-plans">
             <ArrowLeft className="h-4 w-4" />
-            Back
+            Назад
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold tracking-tight">New rental plan</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Новый тарифный план</h1>
         <p className="text-muted-foreground">
-          Create a new pricing plan for bike rentals
+          Создать новый тарифный план для аренды велосипедов
         </p>
       </div>
 
       <Alert>
         <Info className="h-4 w-4" />
         <AlertDescription>
-          Assignments snapshot the plan they were created with, so changing a
-          plan later never rewrites past assignments.
+          Назначения сохраняют снимок тарифа при создании, поэтому изменение тарифа позже не влияет на прошлые назначения.
         </AlertDescription>
       </Alert>
 
       <Card>
         <CardHeader>
-          <CardTitle>Plan details</CardTitle>
+          <CardTitle>Детали тарифа</CardTitle>
           <CardDescription>
-            Set the pricing and terms for this plan. Fields marked with * are
-            required.
+            Установите цены и условия для этого тарифа. Поля, отмеченные *, обязательны для заполнения.
           </CardDescription>
         </CardHeader>
         <CardContent>

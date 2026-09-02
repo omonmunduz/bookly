@@ -83,7 +83,7 @@ export function ReturnBikeForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="return_notes">Notes</Label>
+        <Label htmlFor="return_notes">Примечания</Label>
         <Textarea
           id="return_notes"
           name="return_notes"
@@ -117,7 +117,7 @@ export function ReturnBikeForm({
 
       <div className="flex justify-end gap-3">
         <Button type="button" variant="outline" asChild disabled={isPending}>
-          <Link href={`/assignments/${assignmentId}`}>Cancel</Link>
+          <Link href={`/assignments/${assignmentId}`}>Отмена</Link>
         </Button>
         <Button type="submit" disabled={isPending}>
           {isPending && <Loader2 className="h-4 w-4 animate-spin" />}

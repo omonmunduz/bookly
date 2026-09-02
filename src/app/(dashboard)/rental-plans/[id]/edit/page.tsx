@@ -39,7 +39,7 @@ export default async function EditRentalPlanPage({
             Back
           </Link>
         </Button>
-        <h1 className="text-3xl font-bold tracking-tight">Edit rental plan</h1>
+        <h1 className="text-3xl font-bold tracking-tight">Редактировать rental plan</h1>
         <p className="text-muted-foreground">Update {plan.name}</p>
       </div>
 

@@ -25,8 +25,8 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { CreateAssignmentForm } from '@/components/assignments/create-assignment-form';
 
 export const metadata = {
-  title: 'Assign Bike',
-  description: 'Assign a bike to a courier',
+  title: 'Назначить велосипед',
+  description: 'Назначить велосипед курьеру',
 };
 
 interface PageProps {
@@ -66,9 +66,9 @@ export default async function NewAssignmentPage({ searchParams }: PageProps) {
           </Link>
         </Button>
         <div>
-          <h1 className="text-2xl font-semibold tracking-tight">Assign bike</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">Назначить велосипед</h1>
           <p className="text-sm text-muted-foreground">
-            Assign a bike to a courier with a rental plan
+            Назначить велосипед курьеру с тарифным планом
           </p>
         </div>
       </div>
@@ -78,27 +78,27 @@ export default async function NewAssignmentPage({ searchParams }: PageProps) {
           <Alert variant="destructive" className="mb-6">
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <span>An assignment needs all three of these:</span>
-              {hasNoBikes && <div>• An available bike</div>}
-              {hasNoCouriers && <div>• An active courier</div>}
-              {hasNoPlans && <div>• An active rental plan</div>}
+              <span>Для назначения необходимы все три:</span>
+              {hasNoBikes && <div>• Доступный велосипед</div>}
+              {hasNoCouriers && <div>• Активный курьер</div>}
+              {hasNoPlans && <div>• Активный тарифный план</div>}
             </AlertDescription>
           </Alert>
 
           <div className="flex flex-wrap gap-2">
             {hasNoBikes && (
               <Button variant="outline" size="sm" asChild>
-                <Link href="/bikes/new">Add bike</Link>
+                <Link href="/bikes/new">Добавить велосипед</Link>
               </Button>
             )}
             {hasNoCouriers && (
               <Button variant="outline" size="sm" asChild>
-                <Link href="/couriers/new">Add courier</Link>
+                <Link href="/couriers/new">Добавить курьера</Link>
               </Button>
             )}
             {hasNoPlans && (
               <Button variant="outline" size="sm" asChild>
-                <Link href="/rental-plans/new">Add rental plan</Link>
+                <Link href="/rental-plans/new">Добавить тариф</Link>
               </Button>
             )}
           </div>
@@ -106,9 +106,9 @@ export default async function NewAssignmentPage({ searchParams }: PageProps) {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle>Assignment details</CardTitle>
+            <CardTitle>Детали назначения</CardTitle>
             <CardDescription>
-              Select the bike, courier, and rental plan for this assignment.
+              Выберите велосипед, курьера и тарифный план для назначения.
             </CardDescription>
           </CardHeader>
           <CardContent>
