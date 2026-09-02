@@ -35,7 +35,7 @@ export interface Bike {
   purchase_price: number | null;
   condition_notes: string | null;
   battery_info: string | null;
-  image_url: string; // REQUIRED
+  image_url: string | null; // Optional - file upload coming soon
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -51,7 +51,7 @@ export interface CreateBikeInput {
   purchase_price?: number | null;
   condition_notes?: string | null;
   battery_info?: string | null;
-  image_url: string; // REQUIRED
+  image_url?: string | null; // Optional
 }
 
 export interface UpdateBikeInput {
@@ -62,7 +62,7 @@ export interface UpdateBikeInput {
   purchase_price?: number | null;
   condition_notes?: string | null;
   battery_info?: string | null;
-  image_url?: string;
+  image_url?: string | null;
 }
 
 // ============================================================================
