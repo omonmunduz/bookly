@@ -11,13 +11,13 @@ export const bikeStatusEnum = z.enum(['available', 'assigned', 'maintenance', 'd
 export const createBikeSchema = z.object({
   bike_number: z.string().optional(),
   serial_number: z.string().trim().min(1).max(100).nullable().optional(),
-  model: z.string().trim().min(1, 'Model is required').max(100),
+  model: z.string().trim().min(1, 'Модель обязательна').max(100),
   status: bikeStatusEnum.optional(),
   purchase_date: z.string().date().nullable().optional(),
   purchase_price: z.number().min(0).nullable().optional(),
   condition_notes: z.string().max(500).nullable().optional(),
   battery_info: z.string().max(500).nullable().optional(),
-  image_url: z.string().min(1, 'Bike photo is required'), // REQUIRED
+  image_url: z.string().url('Должен быть действительный URL').nullable().optional(), // Optional - file upload coming soon
 });
 
 export const updateBikeSchema = z.object({
@@ -28,7 +28,7 @@ export const updateBikeSchema = z.object({
   purchase_price: z.number().min(0).nullable().optional(),
   condition_notes: z.string().max(500).nullable().optional(),
   battery_info: z.string().max(500).nullable().optional(),
-  image_url: z.string().min(1).optional(),
+  image_url: z.string().url('Должен быть действительный URL').nullable().optional(),
 });
 
 export const bikeFiltersSchema = z.object({
