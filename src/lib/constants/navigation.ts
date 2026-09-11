@@ -24,6 +24,7 @@ import {
   UsersRound,
   Wallet,
   Wrench,
+  Shield,
   type LucideIcon,
 } from 'lucide-react';
 import { ROUTES } from './routes';
@@ -80,7 +81,7 @@ export const NAV_ITEMS: NavItem[] = [
   },
   {
     label: 'Выплаты',
-    href: '/earnings',
+    href: '/payouts',
     icon: BarChart3,
     available: true,
     minimumRole: 'manager',
@@ -95,6 +96,13 @@ export const NAV_ITEMS: NavItem[] = [
     label: 'Команда',
     href: '/team',
     icon: UsersRound,
+    available: true,
+    minimumRole: 'manager',
+  },
+  {
+    label: 'Журнал аудита',
+    href: '/audit-logs',
+    icon: Shield,
     available: true,
     minimumRole: 'manager',
   },

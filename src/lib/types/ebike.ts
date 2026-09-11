@@ -14,11 +14,104 @@
 export type BikeStatus = 'available' | 'assigned' | 'returned' | 'maintenance' | 'damaged' | 'retired';
 export type CourierStatus = 'active' | 'inactive' | 'suspended';
 export type DurationUnit = 'days' | 'weeks' | 'months';
-export type EarningsStatus = 'draft' | 'approved' | 'paid';
-export type DeductionType = 'rental' | 'damage' | 'equipment' | 'other';
 export type MaintenanceType = 'repair' | 'inspection' | 'replacement' | 'cleaning' | 'other';
 export type InspectionCondition = 'excellent' | 'good' | 'fair' | 'poor' | 'damaged';
 export type UserRole = 'admin' | 'manager' | 'mechanic';
+
+// ============================================================================
+// DEPRECATED - Old earnings system (replaced by courier_balance_transactions)
+// ============================================================================
+/** @deprecated Use TransactionType instead */
+export type EarningsStatus = 'draft' | 'approved' | 'paid';
+/** @deprecated Use TransactionType instead */
+export type DeductionType = 'rental' | 'damage' | 'equipment' | 'other';
+/** @deprecated Use TransactionType instead */
+export type EarningsActivityType =
+  | 'period_created'
+  | 'period_updated'
+  | 'period_deleted'
+  | 'status_changed'
+  | 'marked_as_paid'
+  | 'income_added'
+  | 'income_deleted'
+  | 'deduction_added'
+  | 'deduction_deleted';
+
+// ============================================================================
+// COURIER BALANCE TRANSACTIONS (New ledger system)
+// ============================================================================
+
+export type TransactionType =
+  // Debit types (reduce balance)
+  | 'rent_auto'
+  | 'fine_repair_part_manual'
+  | 'prepayment_payout_manual'
+  | 'other_debit_manual'
+  // Credit types (increase balance)
+  | 'prepayment_manual'
+  | 'fine_repair_part_payment_manual'
+  | 'other_credit_manual';
+
+export type TransactionDirection = 'debit' | 'credit';
+
+export interface CourierBalanceTransaction {
+  id: string;
+  organization_id: string;
+  courier_id: string;
+  type: TransactionType;
+  direction: TransactionDirection;
+  amount: number;
+  note: string | null;
+  period_start: string | null;
+  period_end: string | null;
+  metadata: Record<string, any> | null;
+  created_by: string | null;
+  created_at: string;
+  deleted_at: string | null;
+}
+
+export interface CreateTransactionInput {
+  courier_id: string;
+  type: TransactionType;
+  direction: TransactionDirection;
+  amount: number;
+  note?: string | null;
+  period_start?: string | null;
+  period_end?: string | null;
+  metadata?: Record<string, any> | null;
+}
+
+export interface CourierBalance {
+  courier_id: string;
+  organization_id: string;
+  courier_code: string;
+  full_name: string;
+  balance: number;
+  transaction_count: number;
+  last_transaction_at: string | null;
+}
+
+export interface TransactionFilters {
+  courier_id?: string;
+  type?: TransactionType;
+  direction?: TransactionDirection;
+  period_start?: string;
+  period_end?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface TransactionWithCourier extends CourierBalanceTransaction {
+  courier: {
+    courier_code: string;
+    full_name: string;
+    phone: string;
+  };
+  creator?: {
+    full_name: string;
+    role: string;
+  } | null;
+}
 
 // ============================================================================
 // BIKE
@@ -190,9 +283,11 @@ export interface ReturnAssignmentInput {
 }
 
 // ============================================================================
-// EARNINGS PERIOD
+// DEPRECATED - EARNINGS PERIOD (replaced by courier_balance_transactions)
+// These types remain for database compatibility only. Use the new ledger system.
 // ============================================================================
 
+/** @deprecated Use CourierBalanceTransaction instead */
 export interface EarningsPeriod {
   id: string;
   organization_id: string;
@@ -211,6 +306,7 @@ export interface EarningsPeriod {
   deleted_at: string | null;
 }
 
+/** @deprecated Use CreateTransactionInput instead */
 export interface CreateEarningsPeriodInput {
   courier_id: string;
   period_start: string;
@@ -219,6 +315,7 @@ export interface CreateEarningsPeriodInput {
   notes?: string | null;
 }
 
+/** @deprecated Use CreateTransactionInput instead */
 export interface UpdateEarningsPeriodInput {
   gross_earnings?: number;
   status?: EarningsStatus;
@@ -227,9 +324,10 @@ export interface UpdateEarningsPeriodInput {
 }
 
 // ============================================================================
-// INCOME ENTRY
+// DEPRECATED - INCOME ENTRY (replaced by courier_balance_transactions)
 // ============================================================================
 
+/** @deprecated Use CourierBalanceTransaction instead */
 export interface IncomeEntry {
   id: string;
   organization_id: string;
@@ -240,6 +338,7 @@ export interface IncomeEntry {
   created_at: string;
 }
 
+/** @deprecated Use CreateTransactionInput instead */
 export interface CreateIncomeEntryInput {
   earnings_period_id: string;
   amount: number;
@@ -247,9 +346,10 @@ export interface CreateIncomeEntryInput {
 }
 
 // ============================================================================
-// DEDUCTION
+// DEPRECATED - DEDUCTION (replaced by courier_balance_transactions)
 // ============================================================================
 
+/** @deprecated Use CourierBalanceTransaction instead */
 export interface Deduction {
   id: string;
   organization_id: string;
@@ -262,6 +362,7 @@ export interface Deduction {
   created_at: string;
 }
 
+/** @deprecated Use CreateTransactionInput instead */
 export interface CreateDeductionInput {
   earnings_period_id: string;
   deduction_type: DeductionType;
@@ -271,20 +372,10 @@ export interface CreateDeductionInput {
 }
 
 // ============================================================================
-// EARNINGS ACTIVITY (AUDIT TRAIL)
+// DEPRECATED - EARNINGS ACTIVITY (replaced by courier_balance_transactions)
 // ============================================================================
 
-export type EarningsActivityType =
-  | 'period_created'
-  | 'period_updated'
-  | 'period_deleted'
-  | 'status_changed'
-  | 'marked_as_paid'
-  | 'income_added'
-  | 'income_deleted'
-  | 'deduction_added'
-  | 'deduction_deleted';
-
+/** @deprecated Audit trail now handled by transaction immutability and soft deletes */
 export interface EarningsActivity {
   id: string;
   organization_id: string;
@@ -295,9 +386,7 @@ export interface EarningsActivity {
   created_at: string;
 }
 
-/**
- * Earnings activity with actor information joined in.
- */
+/** @deprecated Use transaction history instead */
 export interface EarningsActivityWithActor extends EarningsActivity {
   actor: {
     full_name: string;
@@ -305,13 +394,7 @@ export interface EarningsActivityWithActor extends EarningsActivity {
   };
 }
 
-/**
- * An earnings period with its courier and deductions joined in, as returned by
- * EarningsRepository.getWithDeductions.
- *
- * The courier is a partial — the repository selects only the three fields the
- * detail page shows — so this cannot be `EarningsPeriod & { courier: Courier }`.
- */
+/** @deprecated Use CourierBalance and TransactionWithCourier instead */
 export interface EarningsPeriodWithDeductions extends EarningsPeriod {
   courier: {
     courier_code: string;

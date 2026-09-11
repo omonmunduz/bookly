@@ -22,7 +22,6 @@ import {
   getActiveAssignmentsAction,
   getOverdueAssignmentsAction,
 } from '@/app/actions/assignments';
-import { getEarningsCountByStatusAction } from '@/app/actions/earnings';
 import { getMaintenancePendingApprovalAction } from '@/app/actions/maintenance';
 import { MetricCard } from '@/components/shared/MetricCard';
 import { Button } from '@/components/ui/button';
@@ -66,7 +65,6 @@ async function DashboardContent({ userRole }: { userRole: string }) {
     activeCouriersResult,
     activeAssignmentsResult,
     overdueAssignmentsResult,
-    earningsCountsResult,
     pendingApprovalsResult,
     bikesAwaitingInspectionResult,
   ] = await Promise.all([
@@ -76,7 +74,6 @@ async function DashboardContent({ userRole }: { userRole: string }) {
     getActiveCouriersAction(),
     getActiveAssignmentsAction(),
     getOverdueAssignmentsAction(0),
-    getEarningsCountByStatusAction(),
     getMaintenancePendingApprovalAction(),
     getBikesAwaitingInspectionAction(),
   ]);
@@ -87,7 +84,6 @@ async function DashboardContent({ userRole }: { userRole: string }) {
   const activeCouriers = activeCouriersResult.success ? activeCouriersResult.data.length : 0;
   const activeAssignments = activeAssignmentsResult.success ? activeAssignmentsResult.data.length : 0;
   const overdueAssignments = overdueAssignmentsResult.success ? overdueAssignmentsResult.data : [];
-  const earningsCounts = earningsCountsResult.success ? earningsCountsResult.data : null;
   const pendingApprovals = pendingApprovalsResult.success ? pendingApprovalsResult.data.length : 0;
   const bikesAwaitingInspection = bikesAwaitingInspectionResult.success ? bikesAwaitingInspectionResult.data : [];
 
@@ -170,11 +166,11 @@ async function DashboardContent({ userRole }: { userRole: string }) {
         />
 
         <MetricCard
-          label="Неоплаченные выплаты"
-          value={earningsCounts ? String(earningsCounts.draft + earningsCounts.approved) : '0'}
-          detail={earningsCounts?.paid ? `${earningsCounts.paid} оплачено` : 'нет оплаченных периодов'}
+          label="Балансы курьеров"
+          value="—"
+          detail="посмотреть выплаты"
           icon={DollarSign}
-          href="/earnings"
+          href="/payouts"
         />
       </section>
 

@@ -68,6 +68,10 @@ export const AUDIT_ACTIONS = {
   DEDUCTION_ADDED: 'DEDUCTION_ADDED',
   DEDUCTION_REMOVED: 'DEDUCTION_REMOVED',
 
+  // Courier Transactions
+  TRANSACTION_CREATED: 'TRANSACTION_CREATED',
+  TRANSACTION_DELETED: 'TRANSACTION_DELETED',
+
   // Employees
   EMPLOYEE_CREATED: 'EMPLOYEE_CREATED',
   EMPLOYEE_UPDATED: 'EMPLOYEE_UPDATED',
@@ -91,6 +95,7 @@ export const ENTITY_TYPES = {
   RENTAL_PLAN: 'rental_plan',
   EARNINGS: 'earnings',
   DEDUCTION: 'deduction',
+  TRANSACTION: 'transaction',
   EMPLOYEE: 'employee',
 } as const;
 
@@ -346,6 +351,57 @@ export class AuditService {
       entityType: ENTITY_TYPES.MAINTENANCE,
       entityId: maintenanceId,
       entityName: metadata.bike_number,
+      metadata,
+    });
+  }
+
+  /**
+   * Convenience method: Log transaction creation
+   */
+  async logTransactionCreated(
+    actorUserId: UserId,
+    transactionId: string,
+    metadata: {
+      courier_name: string;
+      courier_code: string;
+      type: string;
+      direction: string;
+      amount: number;
+      note?: string;
+      period_start?: string | null;
+      period_end?: string | null;
+    }
+  ): Promise<void> {
+    await this.log({
+      actorUserId,
+      action: AUDIT_ACTIONS.TRANSACTION_CREATED,
+      entityType: ENTITY_TYPES.TRANSACTION,
+      entityId: transactionId,
+      entityName: `${metadata.courier_name} - ${metadata.direction === 'credit' ? '+' : '-'}${metadata.amount}`,
+      metadata,
+    });
+  }
+
+  /**
+   * Convenience method: Log transaction deletion
+   */
+  async logTransactionDeleted(
+    actorUserId: UserId,
+    transactionId: string,
+    metadata: {
+      courier_name: string;
+      type: string;
+      direction: string;
+      amount: number;
+      reason?: string;
+    }
+  ): Promise<void> {
+    await this.log({
+      actorUserId,
+      action: AUDIT_ACTIONS.TRANSACTION_DELETED,
+      entityType: ENTITY_TYPES.TRANSACTION,
+      entityId: transactionId,
+      entityName: `${metadata.courier_name} - ${metadata.direction === 'credit' ? '+' : '-'}${metadata.amount}`,
       metadata,
     });
   }

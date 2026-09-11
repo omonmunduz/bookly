@@ -31,6 +31,8 @@ import {
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { formatMoney } from '@/lib/utils/format';
+import { CourierBalanceCard } from '@/components/couriers/courier-balance-card';
+import { CourierTransactionsSection } from '@/components/couriers/courier-transactions-section';
 
 interface PageProps {
   params: Promise<{
@@ -167,10 +169,25 @@ export default async function CourierDetailPage({ params }: PageProps) {
           <Suspense fallback={<CardSkeleton />}>
             <AssignmentHistory courierId={courier.id} />
           </Suspense>
+
+          {/* Транзакции и выплаты (managers only) */}
+          {(role === 'admin' || role === 'manager') && (
+            <Suspense fallback={<CardSkeleton />}>
+              <CourierTransactionsSection
+                courierId={courier.id}
+                courierName={courier.full_name}
+              />
+            </Suspense>
+          )}
         </div>
 
         {/* Right column: Sidebar */}
         <div className="space-y-6">
+          {/* Balance Card (managers only) */}
+          {(role === 'admin' || role === 'manager') && (
+            <CourierBalanceCard courierId={courier.id} />
+          )}
+
           {/* Quick Stats */}
           <Card>
             <CardHeader>
