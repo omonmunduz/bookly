@@ -54,6 +54,8 @@ export type TransactionType =
 
 export type TransactionDirection = 'debit' | 'credit';
 
+export type PaidStatus = 'paid' | 'unpaid';
+
 export interface CourierBalanceTransaction {
   id: string;
   organization_id: string;
@@ -65,6 +67,7 @@ export interface CourierBalanceTransaction {
   period_start: string | null;
   period_end: string | null;
   metadata: Record<string, any> | null;
+  paid_status: PaidStatus;
   created_by: string | null;
   created_at: string;
   deleted_at: string | null;

@@ -20,6 +20,7 @@ import type {
   TransactionWithCourier,
   CourierBalance,
   Result,
+  PaidStatus,
 } from '@/lib/types/ebike';
 
 /**
@@ -136,6 +137,32 @@ export async function deleteTransactionAction(
     return { success: true, data: { id: result.data.id } };
   } catch (error) {
     return failure(error, 'Failed to delete transaction');
+  }
+}
+
+/**
+ * Toggle paid status of a transaction
+ */
+export async function toggleTransactionPaidStatusAction(
+  transactionId: string,
+  currentStatus: PaidStatus
+): Promise<Result<{ id: string; paid_status: PaidStatus }>> {
+  try {
+    const { service } = await getService();
+
+    const newStatus: PaidStatus = currentStatus === 'paid' ? 'unpaid' : 'paid';
+    const result = await service.updatePaidStatus(transactionId, newStatus);
+
+    if (!result.success) {
+      return result;
+    }
+
+    revalidatePath('/couriers');
+    revalidatePath('/payouts');
+
+    return result;
+  } catch (error) {
+    return failure(error, 'Не удалось обновить статус оплаты');
   }
 }
 

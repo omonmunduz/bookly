@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/card';
 import { formatCurrency } from '@/lib/utils/format';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { TransactionList } from '@/components/payouts/transaction-list';
+import { TransactionListWithActions } from '@/components/payouts/transaction-list-with-actions';
 
 export const metadata = {
   title: 'Выплаты',
@@ -190,7 +190,7 @@ async function PayoutsContent() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <TransactionList transactions={transactions} />
+            <TransactionListWithActions transactions={transactions} />
           </CardContent>
         </Card>
       )}

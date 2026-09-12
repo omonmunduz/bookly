@@ -399,4 +399,44 @@ export class CourierTransactionsRepository {
       };
     }
   }
+
+  /**
+   * Update paid status of a transaction.
+   */
+  async updatePaidStatus(
+    id: string,
+    paidStatus: 'paid' | 'unpaid'
+  ): Promise<Result<{ id: string; paid_status: 'paid' | 'unpaid' }>> {
+    try {
+      const { data, error } = await this.supabase
+        .from('courier_balance_transactions' as any)
+        .update({ paid_status: paidStatus })
+        .eq('id', id)
+        .eq('organization_id', this.organizationId)
+        .is('deleted_at', null)
+        .select('id, paid_status')
+        .single();
+
+      if (error) {
+        return { success: false, error: error.message };
+      }
+
+      if (!data) {
+        return { success: false, error: 'Transaction not found' };
+      }
+
+      return {
+        success: true,
+        data: {
+          id: data.id,
+          paid_status: data.paid_status as 'paid' | 'unpaid',
+        },
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to update paid status',
+      };
+    }
+  }
 }

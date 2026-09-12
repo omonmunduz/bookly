@@ -1,7 +1,10 @@
 'use client';
 
+import { useState, useTransition } from 'react';
 import { formatCurrency, formatDate } from '@/lib/utils/format';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Check, Loader2 } from 'lucide-react';
 import {
   Table,
   TableBody,
@@ -19,9 +22,23 @@ import type { TransactionWithCourier } from '@/lib/types/ebike';
 interface TransactionListProps {
   transactions: TransactionWithCourier[];
   showCourier?: boolean;
+  onTogglePaid?: (transactionId: string, currentStatus: 'paid' | 'unpaid') => Promise<void>;
 }
 
-export function TransactionList({ transactions, showCourier = true }: TransactionListProps) {
+export function TransactionList({ transactions, showCourier = true, onTogglePaid }: TransactionListProps) {
+  const [isPending, startTransition] = useTransition();
+  const [pendingId, setPendingId] = useState<string | null>(null);
+
+  const handleTogglePaid = async (transactionId: string, currentStatus: 'paid' | 'unpaid') => {
+    if (!onTogglePaid) return;
+
+    setPendingId(transactionId);
+    startTransition(async () => {
+      await onTogglePaid(transactionId, currentStatus);
+      setPendingId(null);
+    });
+  };
+
   if (transactions.length === 0) {
     return (
       <div className="py-8 text-center text-sm text-muted-foreground">
@@ -41,6 +58,7 @@ export function TransactionList({ transactions, showCourier = true }: Transactio
             <TableHead>Примечание</TableHead>
             <TableHead>Автор</TableHead>
             <TableHead className="text-right">Сумма</TableHead>
+            {onTogglePaid && <TableHead className="text-center">Статус</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -103,6 +121,31 @@ export function TransactionList({ transactions, showCourier = true }: Transactio
                   {transaction.direction === 'debit' ? '-' : '+'}
                   {formatCurrency(transaction.amount)}
                 </TableCell>
+                {onTogglePaid && (
+                  <TableCell className="text-center">
+                    {transaction.paid_status === 'paid' ? (
+                      <Badge variant="default" className="bg-green-600 hover:bg-green-700">
+                        Оплачено
+                      </Badge>
+                    ) : (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleTogglePaid(transaction.id, transaction.paid_status)}
+                        disabled={isPending && pendingId === transaction.id}
+                      >
+                        {isPending && pendingId === transaction.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <>
+                            <Check className="mr-1 h-4 w-4" />
+                            Оплатить
+                          </>
+                        )}
+                      </Button>
+                    )}
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}

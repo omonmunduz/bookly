@@ -194,4 +194,14 @@ export class CourierTransactionsService {
   > {
     return this.repository.getCourierStats(courierId);
   }
+
+  /**
+   * Update paid status of a transaction.
+   */
+  async updatePaidStatus(
+    id: string,
+    paidStatus: 'paid' | 'unpaid'
+  ): Promise<Result<{ id: string; paid_status: 'paid' | 'unpaid' }>> {
+    return this.repository.updatePaidStatus(id, paidStatus);
+  }
 }

@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Combobox } from '@/components/ui/combobox';
 import { createAssignmentAction } from '@/app/actions/assignments';
 import { formatMoney } from '@/lib/utils/format';
 import type { Bike, Courier, RentalPlan } from '@/lib/types/ebike';
@@ -42,6 +43,9 @@ export function CreateAssignmentForm({
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [selectedBikeId, setSelectedBikeId] = useState<string>(defaultBikeId ?? '');
+  const [selectedCourierId, setSelectedCourierId] = useState<string>(defaultCourierId ?? '');
+  const [selectedPlanId, setSelectedPlanId] = useState<string>('');
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -55,9 +59,9 @@ export function CreateAssignmentForm({
 
     startTransition(async () => {
       const result = await createAssignmentAction({
-        bike_id: formData.get('bike_id') as string,
-        courier_id: formData.get('courier_id') as string,
-        rental_plan_id: formData.get('rental_plan_id') as string,
+        bike_id: selectedBikeId,
+        courier_id: selectedCourierId,
+        rental_plan_id: selectedPlanId,
         condition_at_assignment: condition,
         assignment_notes: notes ? notes : null,
       });
@@ -82,21 +86,18 @@ export function CreateAssignmentForm({
         <Label htmlFor="bike_id">
           Bike <span className="text-destructive">*</span>
         </Label>
-        <Select
-          id="bike_id"
-          name="bike_id"
-          required
-          defaultValue={defaultBikeId ?? ''}
-        >
-          <option value="" disabled>
-            Выберите велосипед
-          </option>
-          {bikes.map((bike) => (
-            <option key={bike.id} value={bike.id}>
-              {bike.bike_number} — {bike.model}
-            </option>
-          ))}
-        </Select>
+        <Combobox
+          options={bikes.map((bike) => ({
+            value: bike.id,
+            label: `${bike.serial_number || bike.bike_number} — ${bike.bike_number}`,
+            searchTerms: `${bike.serial_number || ''} ${bike.bike_number} ${bike.model}`.toLowerCase(),
+          }))}
+          value={selectedBikeId}
+          onChange={setSelectedBikeId}
+          placeholder="Выберите велосипед"
+          searchPlaceholder="Поиск по серийному номеру..."
+          emptyText="Велосипеды не найдены"
+        />
         <p className="text-xs text-muted-foreground">
           {bikes.length} available bike{bikes.length === 1 ? '' : 's'}
         </p>
@@ -106,21 +107,18 @@ export function CreateAssignmentForm({
         <Label htmlFor="courier_id">
           Courier <span className="text-destructive">*</span>
         </Label>
-        <Select
-          id="courier_id"
-          name="courier_id"
-          required
-          defaultValue={defaultCourierId ?? ''}
-        >
-          <option value="" disabled>
-            Выберите курьера
-          </option>
-          {couriers.map((courier) => (
-            <option key={courier.id} value={courier.id}>
-              {courier.courier_code} — {courier.full_name}
-            </option>
-          ))}
-        </Select>
+        <Combobox
+          options={couriers.map((courier) => ({
+            value: courier.id,
+            label: `${courier.courier_code} — ${courier.full_name}`,
+            searchTerms: `${courier.courier_code} ${courier.full_name}`.toLowerCase(),
+          }))}
+          value={selectedCourierId}
+          onChange={setSelectedCourierId}
+          placeholder="Выберите курьера"
+          searchPlaceholder="Поиск курьера..."
+          emptyText="Курьеры не найдены"
+        />
         <p className="text-xs text-muted-foreground">
           {couriers.length} active courier{couriers.length === 1 ? '' : 's'}
         </p>
@@ -130,7 +128,13 @@ export function CreateAssignmentForm({
         <Label htmlFor="rental_plan_id">
           Rental plan <span className="text-destructive">*</span>
         </Label>
-        <Select id="rental_plan_id" name="rental_plan_id" required defaultValue="">
+        <Select
+          id="rental_plan_id"
+          name="rental_plan_id"
+          required
+          value={selectedPlanId}
+          onChange={(e) => setSelectedPlanId(e.target.value)}
+        >
           <option value="" disabled>
             Select a rental plan
           </option>
