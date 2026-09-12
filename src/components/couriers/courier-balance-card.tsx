@@ -5,12 +5,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { formatCurrency } from '@/lib/utils/format';
 import { getCourierBalanceAction, getCourierStatsAction } from '@/app/actions/courier-transactions';
+import { PayoutButton } from '@/components/couriers/payout-button';
 
 interface CourierBalanceCardProps {
   courierId: string;
+  courierName: string;
 }
 
-export function CourierBalanceCard({ courierId }: CourierBalanceCardProps) {
+export function CourierBalanceCard({ courierId, courierName }: CourierBalanceCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -29,14 +31,14 @@ export function CourierBalanceCard({ courierId }: CourierBalanceCardProps) {
       </CardHeader>
       <CardContent>
         <Suspense fallback={<BalanceSkeleton />}>
-          <BalanceContent courierId={courierId} />
+          <BalanceContent courierId={courierId} courierName={courierName} />
         </Suspense>
       </CardContent>
     </Card>
   );
 }
 
-async function BalanceContent({ courierId }: { courierId: string }) {
+async function BalanceContent({ courierId, courierName }: { courierId: string; courierName: string }) {
   const [balanceResult, statsResult] = await Promise.all([
     getCourierBalanceAction(courierId),
     getCourierStatsAction(courierId),
@@ -116,11 +118,19 @@ async function BalanceContent({ courierId }: { courierId: string }) {
             История
           </Link>
         </Button>
-        <Button size="sm" className="flex-1" asChild>
-          <Link href={`/couriers/${courierId}/transactions/new`}>
-            Добавить
-          </Link>
-        </Button>
+        {balance.balance > 0 ? (
+          <PayoutButton
+            courierId={courierId}
+            courierName={courierName}
+            balance={balance.balance}
+          />
+        ) : (
+          <Button size="sm" className="flex-1" asChild>
+            <Link href={`/couriers/${courierId}/transactions/new`}>
+              Добавить
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );

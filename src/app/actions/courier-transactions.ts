@@ -166,6 +166,58 @@ export async function toggleTransactionPaidStatusAction(
   }
 }
 
+/**
+ * Pay out a courier's positive balance (resets balance to 0)
+ */
+export async function payoutCourierBalanceAction(
+  courierId: string
+): Promise<Result<{ id: string; amount: number }>> {
+  try {
+    const { user, service } = await getService();
+
+    // Get current balance
+    const balanceResult = await service.getCourierBalance(courierId);
+    if (!balanceResult.success) {
+      return { success: false, error: balanceResult.error };
+    }
+
+    const balance = balanceResult.data.balance;
+
+    // Only pay out if balance is positive
+    if (balance <= 0) {
+      return {
+        success: false,
+        error: 'Баланс курьера не положительный. Нечего выплачивать.',
+      };
+    }
+
+    // Create a payout transaction (debit that zeros the balance)
+    const result = await service.create(
+      {
+        courier_id: courierId,
+        type: 'prepayment_payout_manual',
+        direction: 'debit',
+        amount: balance,
+        note: `Выплата баланса: ${balance} тг`,
+      },
+      user.id
+    );
+
+    if (!result.success) {
+      return result;
+    }
+
+    // Revalidate relevant pages
+    revalidatePath('/payouts');
+    revalidatePath(`/couriers/${courierId}`);
+    revalidatePath('/dashboard');
+
+    return { success: true, data: { id: result.data.id, amount: balance } };
+  } catch (error) {
+    return failure(error, 'Не удалось выполнить выплату');
+  }
+}
+
 // ============================================================================
 // BALANCES
 // ============================================================================

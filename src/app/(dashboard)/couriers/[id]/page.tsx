@@ -185,7 +185,7 @@ export default async function CourierDetailPage({ params }: PageProps) {
         <div className="space-y-6">
           {/* Balance Card (managers only) */}
           {(role === 'admin' || role === 'manager') && (
-            <CourierBalanceCard courierId={courier.id} />
+            <CourierBalanceCard courierId={courier.id} courierName={courier.full_name} />
           )}
 
           {/* Quick Stats */}
