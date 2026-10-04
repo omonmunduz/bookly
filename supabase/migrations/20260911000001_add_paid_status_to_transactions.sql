@@ -7,7 +7,7 @@ ADD COLUMN paid_status TEXT DEFAULT 'unpaid' CHECK (paid_status IN ('paid', 'unp
 -- Set existing auto transactions as paid (they are system-generated rent charges)
 UPDATE courier_balance_transactions
 SET paid_status = 'paid'
-WHERE type LIKE '%_auto';
+WHERE type::text LIKE '%_auto';
 
 -- Add index for filtering by paid status
 CREATE INDEX idx_courier_balance_transactions_paid_status

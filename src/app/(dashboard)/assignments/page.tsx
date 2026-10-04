@@ -159,7 +159,7 @@ async function AssignmentsTable({
   const courierLabels = new Map(
     (couriersResult.success ? couriersResult.data : []).map((courier) => [
       courier.id,
-      { primary: courier.full_name, secondary: courier.courier_code },
+      { primary: courier.full_name, secondary: courier.identification_number },
     ])
   );
 
